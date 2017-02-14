@@ -18,7 +18,6 @@
     <ToggleButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Shoveling"
         android:id="@+id/toggleButton"
         android:layout_marginTop="44dp"
         android:checked="false"
