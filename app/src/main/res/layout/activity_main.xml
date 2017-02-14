@@ -45,4 +45,13 @@
         android:layout_alignBottom="@+id/textView3"
         android:layout_centerHorizontal="true" />
 
+    <RadioButton
+        android:text="RadioButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toggleButton2"
+        android:layout_alignEnd="@+id/toggleButton2"
+        android:layout_marginTop="81dp"
+        android:id="@+id/radioButton" />
+
 </RelativeLayout>
