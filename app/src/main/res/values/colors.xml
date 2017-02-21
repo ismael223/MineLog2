@@ -3,6 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="colorShift">#134950</color>
-    <color name="colorShiftUndone">#FFFF66</color>
+    <color name="colorShift">#ef341350</color>
+    <color name="colorShiftUndone">#d2790006</color>
+    <color name="colorEqlist">#da6289c6</color>
 </resources>

@@ -10,6 +10,12 @@
     android:layout_height="match_parent"
     android:id="@+id/equipment_list"
     android:orientation="vertical">
+    <Button
+        android:id="@+id/add_new_eq"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Add New Equipment" />
+
 
 </LinearLayout>
 </ScrollView>

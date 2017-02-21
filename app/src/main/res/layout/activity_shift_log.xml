@@ -7,37 +7,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:scrollbars="none"
-    tools:context=".Shift_log">
+    tools:context=".Shift_log"
+    android:verticalScrollbarPosition="right"
+    android:scrollbarStyle="insideInset">
 
     <LinearLayout android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
-
+        android:layout_height="wrap_content"
+        android:id="@+id/shift_list"
+        android:orientation="vertical">
 
             <Button
-                android:id="@+id/continuePizza"
+                android:id="@+id/add_new_shift"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:text="continue" />
-
-            <Button
-                android:id="@+id/finishP"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/continuePizza"
-                android:layout_alignParentStart="true"
-                android:text="finish" />
+                android:text="Add New Shift" />
 
 
-
-        </RelativeLayout>
     </LinearLayout>
 </ScrollView>
