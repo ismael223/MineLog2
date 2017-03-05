@@ -3,18 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:verticalScrollbarPosition="right"
-    android:scrollbarStyle="insideInset">
+    android:scrollbarStyle="insideInset"
+    android:background="@color/backgroundall">
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:id="@+id/equipment_list"
     android:orientation="vertical">
+
     <Button
         android:id="@+id/add_new_eq"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Add New Equipment" />
+        android:text="@string/add_eq"
+        android:layout_gravity="bottom"
+        android:onClick="function5"/>
+
 
 
 </LinearLayout>

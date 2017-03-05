@@ -1,6 +1,16 @@
 <resources>
-    <string name="app_name">Equipment List</string>
+    <string name="app_name">Mine Log</string>
     <string name="shift_name">Shift Logs</string>
     <string name="equipment_name">Equipment</string>
     <string name="activity_list">Activity List</string>
+    <string name="add_eq">Add New Equipment</string>
+    <string name="add_shift">Add New Shift</string>
+    <string name="add_eq_name">Equipment Name</string>
+    <string name="edit_eq">Edit Equipment Name</string>
+    <string name="name">Name</string>
+    <string name="new_eq">Enter Equipment Name</string>
+    <string name="type">Type</string>
+    <string name="cancel">Cancel</string>
+    <string name="dialog_new_shift">You will now create a new shift. Press OK to enter Activity Panel.</string>
+    <string name="ok">Ok</string>
 </resources>
