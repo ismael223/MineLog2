@@ -25,8 +25,8 @@ public class Shift_log extends AppCompatActivity {
         LinearLayout myLayout = (LinearLayout) findViewById(R.id.shift_list);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-        Intent intent = getIntent();
-        int temp = intent.getIntExtra("int_value", 0);
+        Bundle bundle = getIntent().getExtras();
+        String message = bundle.getString("message");
 
         String[] shifts = {"shift 1", "shift 2", "shift 3", "shift 4", "shift 5", "shift A", "shift B", "shift C", "shift D", "shift E", "shift F", "shift G"};
         int shiftsize = shifts.length;
@@ -50,7 +50,7 @@ public class Shift_log extends AppCompatActivity {
             myLayout.addView(shift[l]);
             registerForContextMenu(shift[l]);
         }
-        Toast.makeText(this, "Log Import Successful " + (temp + 1), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Log Import Successful from " + message, Toast.LENGTH_SHORT).show();
 
     }
 

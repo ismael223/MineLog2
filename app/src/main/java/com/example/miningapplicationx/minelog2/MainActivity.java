@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent shiftlog = new Intent(getApplicationContext(), Shift_log.class);
-                    shiftlog.putExtra("int_value", equipment[b].getId());
+                    shiftlog.putExtra("message", equipment[b].getText().toString());
                     startActivity(shiftlog);}
             });
             myLayout.addView(equipment[a]);
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         else {return false;}
         return true;
     }
-
+//Add EQ
     public void function1(int id){
 
         final Dialog dialog1 = new Dialog(MainActivity.this);
@@ -132,20 +132,23 @@ public class MainActivity extends AppCompatActivity {
                         selectionArgs);
 
                 db.close();
-
-                finish();
-                startActivity(getIntent());
                 }
 
         });
         dialog1.show();
 
+        finish();
+        startActivity(getIntent());
 
     }
+//End Add Eq
     public void function2(int id){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        Toast.makeText(this, "Deleted Equipment " + (id+1) , Toast.LENGTH_SHORT).show();
-        db.delete("EQUIPMENTLOG","_ID=? ",new String[]{String.valueOf(id+1)});
+        String idpass = String.valueOf(id);
+        TextView tv = (TextView) this.findViewById(id);
+        String myString= tv.getText().toString();
+        Toast.makeText(this, "Deleted Equipment " + myString , Toast.LENGTH_SHORT).show();
+        db.delete("EQUIPMENTLOG","EQUIPMENTNAME=? ",new String[]{myString});
         db.close();
         finish();
         startActivity(getIntent());
