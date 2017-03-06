@@ -20,5 +20,15 @@ import android.database.sqlite.SQLiteOpenHelper;
         db.execSQL(DBContract.Table1.DELETE_TABLE);
         onCreate(db);
     }
-
+    public void AddDesiredTable(String TableNmae){
+    /*At first you will need a Database object.Lets create it.*/
+        SQLiteDatabase ourDatabase=this.getWritableDatabase();
+        String KEY_ROWID="EQSHIFTID";
+        String KEY_2TBL="EQSHIFTMD";
+        String KEY_ONE="EQSHIFTNUM";
+    /*then call 'execSQL()' on it. Don't forget about using TableName Variable as tablename.*/
+        ourDatabase.execSQL("CREATE TABLE IF NOT EXISTS " + TableNmae+ " ("
+                + KEY_ROWID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_2TBL
+                + " TEXT NOT NULL, " + KEY_ONE + " TEXT NOT NULL);");
+    }
 }

@@ -8,6 +8,7 @@
     <string name="add_eq_name">Equipment Name</string>
     <string name="edit_eq">Edit Equipment Name</string>
     <string name="name">Name</string>
+    <string name="edit_eq_shift">Edit Shift Name</string>
     <string name="new_eq">Enter Equipment Name</string>
     <string name="type">Type</string>
     <string name="cancel">Cancel</string>

@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         Button button = (Button) dialog1.findViewById(R.id.dialog_okedit);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                SQLiteDatabase db = dbHelper.getReadableDatabase();
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
                 EditText edit=(EditText)dialog1.findViewById(R.id.username);
                 String text = edit.getText().toString();
                 ContentValues values = new ContentValues();
@@ -132,13 +132,14 @@ public class MainActivity extends AppCompatActivity {
                         selectionArgs);
 
                 db.close();
+
+                finish();
+                startActivity(getIntent());
                 }
 
         });
         dialog1.show();
 
-        finish();
-        startActivity(getIntent());
 
     }
 //End Add Eq
@@ -153,6 +154,8 @@ public class MainActivity extends AppCompatActivity {
         finish();
         startActivity(getIntent());
     }
+
+    //ADDEQ
     public void function5(View s){
 
         final Dialog dialog = new Dialog(MainActivity.this);
@@ -161,17 +164,22 @@ public class MainActivity extends AppCompatActivity {
         Button button = (Button) dialog.findViewById(R.id.dialog_ok);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
 
                 EditText edit=(EditText)dialog.findViewById(R.id.new_eq_name);
                 String text=edit.getText().toString();
                 EditText edit_type = (EditText)dialog.findViewById(R.id.new_eq_type);
                 String text_type=edit_type.getText().toString();
 
+                SQLiteDatabase db1 = dbHelper.getReadableDatabase();
+                dbHelper.AddDesiredTable(text);
+                Toast.makeText(MainActivity.this, "Created Equipment " + text , Toast.LENGTH_SHORT).show();
+                db1.close();
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
                 dialog.dismiss();
                 newname=text;
                 newtype=text_type;
                 ContentValues values = new ContentValues();
+
                 values.put(DBContract.Table1.COLUMN_NAME_COL1, newname);
                 values.put(DBContract.Table1.COLUMN_NAME_COL2, newtype);
                 long newRowId;
@@ -189,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
 
     }
+
 /*END DIALOGS*/
 protected void onDestroy() {
     dbHelper.close();
