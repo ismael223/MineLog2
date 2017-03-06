@@ -29,6 +29,6 @@ import android.database.sqlite.SQLiteOpenHelper;
     /*then call 'execSQL()' on it. Don't forget about using TableName Variable as tablename.*/
         ourDatabase.execSQL("CREATE TABLE IF NOT EXISTS " + TableNmae+ " ("
                 + KEY_ROWID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_2TBL
-                + " TEXT NOT NULL, " + KEY_ONE + " TEXT NOT NULL);");
+                + " TEXT NOT NULL, " + KEY_ONE + "INTEGER);");
     }
 }
