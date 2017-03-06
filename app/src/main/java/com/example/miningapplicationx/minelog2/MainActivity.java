@@ -111,6 +111,9 @@ public class MainActivity extends AppCompatActivity {
         final Dialog dialog1 = new Dialog(MainActivity.this);
 
         dialog1.setContentView(R.layout.dialog_edit);
+        TextView toldv = (TextView) this.findViewById(id);
+        final String myoldString= toldv.getText().toString();
+
 
         final int thisid = id;
         Button button = (Button) dialog1.findViewById(R.id.dialog_okedit);
@@ -130,6 +133,14 @@ public class MainActivity extends AppCompatActivity {
                         values,
                         selection,
                         selectionArgs);
+
+                db.beginTransaction();
+                try{
+                    db.execSQL("ALTER TABLE " + myoldString  + " RENAME TO " + text+";");
+                    db.setTransactionSuccessful();
+                } finally{
+                    db.endTransaction();
+                }
 
                 db.close();
 
