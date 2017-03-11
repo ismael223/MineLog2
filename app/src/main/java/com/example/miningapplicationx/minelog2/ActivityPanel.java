@@ -44,9 +44,7 @@ public class ActivityPanel extends AppCompatActivity {
         activityView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Creates a toast when item in the gridview/activity is selected
-                Toast.makeText(getApplicationContext(),
-                        ((TextView) view).getText(),Toast.LENGTH_SHORT).show();
+                //TODO: Add functions here for activity recording
 
             }
         });
