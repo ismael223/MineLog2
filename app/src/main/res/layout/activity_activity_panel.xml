@@ -8,100 +8,17 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.miningapplicationx.minelog2.ActivityPanel">
-    <ScrollView
+    <GridView
+        android:id="@+id/activity_view"
+        android:numColumns="2"
+        android:gravity="center"
+        android:layout_margin="10dp"
+        android:horizontalSpacing="10dp"
+        android:listSelector="@drawable/activity_toggle_highlighting"
+        android:verticalSpacing="10dp"
+        android:stretchMode="columnWidth"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="false">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-    <ToggleButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/toggleButton"
-        android:layout_marginTop="44dp"
-        android:checked="false"
-        android:layout_centerHorizontal="true" />
+        android:layout_height="match_parent">
+    </GridView>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Shovelling"
-        android:id="@+id/textView2"
-        android:layout_alignBottom="@+id/toggleButton"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Travelling"
-        android:id="@+id/textView3"
-        android:layout_below="@+id/textView2"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="43dp" />
-
-    <ToggleButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New ToggleButton"
-        android:id="@+id/toggleButton2"
-        android:layout_alignBottom="@+id/textView3"
-        android:layout_centerHorizontal="true" />
-
-    <ToggleButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New ToggleButton"
-        android:id="@+id/toggleButton3"
-        android:layout_below="@+id/toggleButton2"
-        android:layout_alignStart="@+id/toggleButton2"
-        android:layout_marginTop="17dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Maintenance"
-        android:id="@+id/textView4"
-        android:layout_alignBottom="@+id/toggleButton3"
-        android:layout_alignParentStart="true" />
-    <ToggleButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New ToggleButton"
-        android:id="@+id/toggleButton4"
-        android:layout_below="@+id/toggleButton3"
-        android:layout_alignStart="@+id/toggleButton3"
-        android:layout_marginTop="17dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Downtime"
-        android:id="@+id/textView5"
-        android:layout_alignBottom="@+id/toggleButton4"
-        android:layout_alignParentStart="true" />
-    <ToggleButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New ToggleButton"
-        android:id="@+id/toggleButton5"
-        android:layout_below="@+id/toggleButton4"
-        android:layout_alignStart="@+id/toggleButton4"
-        android:layout_marginTop="17dp" />
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Standby"
-        android:id="@+id/textView6"
-        android:layout_alignBottom="@+id/toggleButton5"
-        android:layout_alignParentStart="true" />
-            </RelativeLayout>
-    </ScrollView>
 </RelativeLayout>
