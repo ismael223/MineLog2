@@ -2,6 +2,7 @@ package com.example.miningapplicationx.minelog2;
 
 import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -21,8 +22,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.view.ContextMenu.ContextMenuInfo;
 
+import com.opencsv.CSVWriter;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Shift_log extends AppCompatActivity {
 
@@ -54,9 +62,7 @@ public class Shift_log extends AppCompatActivity {
             i++;
         }
         cursor.close();
- //       String[] shifts = {"1","2","3"};
 //END SQL EXXTRACT
-
         int shiftsize = shifts.length;
         TextView[] shift = new TextView[shiftsize];
         for (int l = 0; l < (shiftsize); l++) {
@@ -78,8 +84,8 @@ public class Shift_log extends AppCompatActivity {
             myLayout.addView(shift[l]);
             registerForContextMenu(shift[l]);
         }
-        Toast.makeText(this, "Log Import Successful from " + placeholder + date, Toast.LENGTH_SHORT).show();
 
+        Toast.makeText(this, "Log Import Successful from " + placeholder + date, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -115,6 +121,24 @@ public class Shift_log extends AppCompatActivity {
 
     public void function3(int id) {
         Toast.makeText(this, "Shift Log Exported", Toast.LENGTH_SHORT).show();
+
+        String baseDir = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
+        String fileName = "AnalysisData" + placeholder +".csv";
+        String filePath = baseDir + File.separator+ "Download" + File.separator+ fileName;
+        File f = new File(filePath);
+
+        List<String[]> data = new ArrayList<String[]>();
+        data.add(new String[] {"India", "New Delhi"});
+        data.add(new String[] {"United States", "Washington D.C"});
+        data.add(new String[] {"Germany", "Berlin"});
+
+        try {
+            CSVWriter writer = new CSVWriter(new FileWriter(f));
+            writer.writeAll(data);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     public void function4(View s){
         AlertDialog.Builder builder = new AlertDialog.Builder(Shift_log.this);
