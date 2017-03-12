@@ -14,7 +14,8 @@
         />
     <EditText
         android:id="@+id/new_eq_name"
-        android:inputType="text"
+        android:digits="ABCDEFHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
+        android:inputType="textFilter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -25,7 +26,8 @@
  />
     <EditText
         android:id="@+id/new_eq_type"
-        android:inputType="text"
+        android:digits="ABCDEFHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
+        android:inputType="textFilter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -39,5 +41,13 @@
         android:text="@string/ok"
         android:layout_gravity="bottom"
         android:id="@+id/dialog_ok"
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel"
+        android:layout_gravity="bottom"
+        android:id="@+id/dialog_cancel"
         />
 </LinearLayout>
