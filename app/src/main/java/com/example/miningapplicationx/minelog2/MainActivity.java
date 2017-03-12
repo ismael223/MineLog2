@@ -15,6 +15,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -121,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
                 EditText edit=(EditText)dialog1.findViewById(R.id.username);
+                edit.setFilters(new InputFilter[]{ alphaNumericFilter});
                 String text = edit.getText().toString();
                 ContentValues values = new ContentValues();
                 values.put(DBContract.Table1.COLUMN_NAME_COL1,text );
@@ -154,6 +157,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 //End Add Eq
+
+
     public void function2(int id){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String idpass = String.valueOf(id);
@@ -177,8 +182,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 EditText edit=(EditText)dialog.findViewById(R.id.new_eq_name);
+                edit.setFilters(new InputFilter[]{ alphaNumericFilter});
                 String text=edit.getText().toString();
+
                 EditText edit_type = (EditText)dialog.findViewById(R.id.new_eq_type);
+                edit_type.setFilters(new InputFilter[]{ alphaNumericFilter});
                 String text_type=edit_type.getText().toString();
 
                 SQLiteDatabase db1 = dbHelper.getReadableDatabase();
@@ -214,6 +222,17 @@ protected void onDestroy() {
     dbHelper.close();
     super.onDestroy();
 }
+    InputFilter alphaNumericFilter = new InputFilter() {
+        public CharSequence filter(CharSequence arg0, int arg1, int arg2, Spanned arg3, int arg4, int arg5)
+        {
+            for (int k = arg1; k < arg2; k++) {
+                if (!Character.isLetterOrDigit(arg0.charAt(k))) {
+                    return "";
+                }   //the first editor deleted this bracket when it is definitely necessary...
+            }
+            return null;
+        }
+    };
 
 }
 

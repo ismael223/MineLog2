@@ -16,8 +16,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Shift_log"
-            android:label="@string/shift_name" />
+            android:name=".Shift_log"/>
         <activity android:name=".ActivityPanel"
             android:label="@string/activity_list">
         </activity>

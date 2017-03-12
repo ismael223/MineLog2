@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Mine Log</string>
-    <string name="shift_name">Shift Logs</string>
     <string name="equipment_name">Equipment</string>
     <string name="activity_list">Activity List</string>
     <string name="add_eq">Add New Equipment</string>

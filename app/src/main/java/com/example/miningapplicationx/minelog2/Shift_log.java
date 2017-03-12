@@ -39,6 +39,7 @@ public class Shift_log extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         String message = bundle.getString("message");
         placeholder=message;
+        setTitle("Shift log for " + placeholder);
         LinearLayout myLayout = (LinearLayout) findViewById(R.id.shift_list);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 //SQLEXTRACT
@@ -103,15 +104,14 @@ public class Shift_log extends AppCompatActivity {
 
     public void function2(int id) {
         Toast.makeText(this, "Deleted Shift", Toast.LENGTH_SHORT).show();
-   /*     SQLiteDatabase db = dbHelper.getWritableDatabase();
-        String idpass = String.valueOf(id);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
         TextView tv = (TextView) this.findViewById(id);
         String myString= tv.getText().toString();
-        db.delete(message,"EQSHIFTMD=? ",new String[]{myString});
+        db.delete(placeholder,"EQSHIFTMD=? ",new String[]{myString});
         db.close();
         finish();
         startActivity(getIntent());
-  */  }
+    }
 
     public void function3(int id) {
         Toast.makeText(this, "Shift Log Exported", Toast.LENGTH_SHORT).show();
@@ -123,16 +123,33 @@ public class Shift_log extends AppCompatActivity {
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
-                Cursor cursor = db.rawQuery("READ FROM EQUIPMENTLOG", null);
                 ContentValues values = new ContentValues();
-                int shiftnum=0;
                 values.put("EQSHIFTMD", date);
-                values.put("EQSHIFTNUM", shiftnum);
                 long newRowId;
                 newRowId = db.insert(
                         placeholder,
                         null,
                         values);
+                String shifts;
+                Cursor cursor = db.rawQuery("SELECT * FROM " + placeholder + " WHERE EQSHIFTMD =" + date, null);
+                String uname= "0", uId="0";
+                if( cursor != null && cursor.moveToFirst() ) {
+                    uname = cursor.getString(cursor.getColumnIndex("EQSHIFTMD"));
+                    uId = cursor.getString(cursor.getColumnIndex("EQSHIFTID"));
+                }
+                    shifts = uname + " log entry number " + uId;
+                    ContentValues values1 = new ContentValues();
+                    values1.put("EQSHIFTMD",shifts);
+
+                    String selection = "EQSHIFTID" + " LIKE ?";
+                    String[] selectionArgs = { String.valueOf(uId) };
+
+                    int count = db.update(
+                            placeholder,
+                            values1,
+                            selection,
+                            selectionArgs);
+                cursor.close();
 
                 finish();
                 startActivity(getIntent());

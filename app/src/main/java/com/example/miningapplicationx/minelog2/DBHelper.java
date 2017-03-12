@@ -25,10 +25,10 @@ import android.database.sqlite.SQLiteOpenHelper;
         SQLiteDatabase ourDatabase=this.getWritableDatabase();
         String KEY_ROWID="EQSHIFTID";
         String KEY_2TBL="EQSHIFTMD";
-        String KEY_ONE="EQSHIFTNUM";
+        String KEY_ONE="EQNUM";
     /*then call 'execSQL()' on it. Don't forget about using TableName Variable as tablename.*/
         ourDatabase.execSQL("CREATE TABLE IF NOT EXISTS " + TableNmae+ " ("
                 + KEY_ROWID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_2TBL
-                + " TEXT NOT NULL, " + KEY_ONE + "INTEGER);");
+                + " TEXT NOT NULL, " + KEY_ONE + " INTEGER);");
     }
 }
