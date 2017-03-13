@@ -38,7 +38,6 @@ public class Shift_log extends AppCompatActivity {
     public String placeholder;
     public final String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -78,6 +77,7 @@ public class Shift_log extends AppCompatActivity {
                 @Override
                 public void onClick(View s) {
                     Intent shiftlog = new Intent(getApplicationContext(), ActivityPanel.class);
+                    shiftlog.putExtra("message", placeholder);
                     startActivity(shiftlog);
                 }
             });

@@ -13,4 +13,5 @@
     <string name="cancel">Cancel</string>
     <string name="dialog_new_shift">You will now create a new shift. Press OK to enter Activity Panel.</string>
     <string name="ok">Ok</string>
+    <string name="add_activity">Add New Activity</string>
 </resources>
