@@ -98,6 +98,7 @@ public class ActivityPanel extends AppCompatActivity {
                                                                          int position, long id) {
                                                   Log.v("item", (String) parent.getItemAtPosition(position));
                                                   eqypenew= parent.getSelectedItem().toString();
+                                                  eqypenew = eqypenew.substring(0,1);
                                               }
 
                                               @Override
@@ -119,7 +120,20 @@ public class ActivityPanel extends AppCompatActivity {
 
                 Toast.makeText(ActivityPanel.this, "Created Activity " + text, Toast.LENGTH_SHORT).show();
                 activitylist.add(text);
-/////////////////////
+
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                dialog.dismiss();
+
+                ContentValues values = new ContentValues();
+                values.put("ACTIVITY", text);
+                values.put("TYPE", eqypenew);
+                long newRowId;
+                newRowId = db.insert(
+                        eqdbname,
+                        null,
+                        values);
+
+                db.close();
                 finish();
                 startActivity(getIntent());
 
