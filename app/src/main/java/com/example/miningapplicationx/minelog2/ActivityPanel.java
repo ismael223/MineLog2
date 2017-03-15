@@ -53,8 +53,6 @@ public class ActivityPanel extends AppCompatActivity {
         lognum=shift_spec.substring(26,27);
         eqdbname = equip_name +"aclist";
         dbname = equip_name +"_" + date +"_"+ "logentry" +lognum;
-        Toast.makeText(ActivityPanel.this, "Created Activity Log " + dbname, Toast.LENGTH_SHORT).show();
-
 
 
         Cursor cursor = db.rawQuery("SELECT * FROM " + eqdbname , null);
@@ -108,8 +106,6 @@ public class ActivityPanel extends AppCompatActivity {
                         null,
                         values);
 
-                Toast.makeText(getApplicationContext(), activity_time_str+" "+activity_name + activity_type, Toast.LENGTH_SHORT).show();
-
 
                 cursor.close();
                 db.close();
@@ -123,12 +119,9 @@ public class ActivityPanel extends AppCompatActivity {
         dialog.setContentView(R.layout.dialog_activity_add);
         Spinner spinner = (Spinner)dialog.findViewById(R.id.ac_type);
 
-// Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.actype_array, android.R.layout.simple_spinner_item);
-// Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-// Apply the adapter to the spinner
 
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
