@@ -215,6 +215,7 @@ public class MainActivity extends AppCompatActivity {
 
                 SQLiteDatabase db1 = dbHelper.getReadableDatabase();
                 dbHelper.AddDesiredTable(text);
+                dbHelper.AddActivityList(text+"aclist");
                 Toast.makeText(MainActivity.this, "Created Equipment " +text, Toast.LENGTH_SHORT).show();
                 db1.close();
                 SQLiteDatabase db = dbHelper.getWritableDatabase();

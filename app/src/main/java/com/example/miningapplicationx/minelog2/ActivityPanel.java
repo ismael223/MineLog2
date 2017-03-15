@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,46 +31,38 @@ public class ActivityPanel extends AppCompatActivity {
 
     public final DBHelper dbHelper = new DBHelper(ActivityPanel.this);
     public ArrayList<String> activitylist = new ArrayList<>();
+    public static String eqdbname;
+    public static String eqypenew;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        activitylist.add("End Shift");
-        activitylist.add("Maintenance");
-        activitylist.add("Downtime");
-        activitylist.add("Standby");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_panel);
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         Bundle bundle = getIntent().getExtras();
         String equip_name = bundle.getString("message");
+        eqdbname = equip_name +"aclist";
 
-//initialization start
-        //sqlextract
-        Cursor cursor = db.rawQuery("SELECT * FROM EQUIPMENTLOG WHERE EQUIPMENTNAME = '" + equip_name +"'", null);
-        cursor.moveToFirst();
-        String uname = cursor.getString(cursor.getColumnIndex("EQUIPMENTTYPE"));
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + eqdbname , null);
+        String[] activities = new String[cursor.getCount()];
+        int i = 0;
+        while (cursor.moveToNext()) {
+            String unames = cursor.getString(cursor.getColumnIndex("ACTIVITY"));
+            activities[i] = unames;
+            i++;
+        }
         cursor.close();
-        String truck="truck";String truck1="Truck";String shovel="shovel"; String shovel1="Shovel";
-        //sqlextract close
-        if (uname.equals(truck)||uname.equals(truck1)){
-            activitylist.add("Travelling");
-            activitylist.add("Loading");
-        }
-        else if (uname.equals(shovel)||uname.equals(shovel1))
-        {
-            activitylist.add("Travelling");
-            activitylist.add("Shovelling");
-        }
-        else{
-        }
+        db.close();
+
 //initialization end
         //Gets Grid View from activity_activity_panel.xml
         activityView = (GridView) findViewById(R.id.activity_view);
 
         //Create and Adapter for activityView
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_expandable_list_item_1,activitylist){
+                android.R.layout.simple_expandable_list_item_1,activities){
         };
 
         //Sets adapter to the Adpater of activity View
@@ -84,52 +78,63 @@ public class ActivityPanel extends AppCompatActivity {
             }
         });
     }
-    public void add_activity() {
+    public void add_activity_new(View s) {
 
         final Dialog dialog = new Dialog(ActivityPanel.this);
-        dialog.setContentView(R.layout.dialog_equipment_add);
+        dialog.setContentView(R.layout.dialog_activity_add);
+        Spinner spinner = (Spinner)dialog.findViewById(R.id.ac_type);
 
-        Button button = (Button) dialog.findViewById(R.id.dialog_ok);
+// Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.actype_array, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                              @Override
+                                              public void onItemSelected(AdapterView<?> parent, View view,
+                                                                         int position, long id) {
+                                                  Log.v("item", (String) parent.getItemAtPosition(position));
+                                                  eqypenew= parent.getSelectedItem().toString();
+                                              }
+
+                                              @Override
+                                              public void onNothingSelected(AdapterView<?> parent) {
+
+                                              }
+                                          });
+
+        Button button = (Button) dialog.findViewById(R.id.dialog_okac);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                EditText edit = (EditText) dialog.findViewById(R.id.new_eq_name);
+                EditText edit = (EditText) dialog.findViewById(R.id.new_ac_name);
                 String text = edit.getText().toString();
                 if (TextUtils.isEmpty(text)) {
                     edit.setError("This field cannot be empty.");
                     return;
                 }
 
-                EditText edit_type = (EditText) dialog.findViewById(R.id.new_eq_type);
-                String text_type = edit_type.getText().toString();
-                if (TextUtils.isEmpty(text_type)) {
-                    edit_type.setError("This field cannot be empty.");
-                    return;
-                }
-
-/*                SQLiteDatabase db1 = dbHelper.getReadableDatabase();
-                dbHelper.AddDesiredTable(text);
-                Toast.makeText(MainActivity.this, "Created Equipment " +text, Toast.LENGTH_SHORT).show();
-                db1.close();
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
-                dialog.dismiss();
-                newname = text;
-                newtype = text_type;
-                ContentValues values = new ContentValues();
-
-                values.put(DBContract.Table1.COLUMN_NAME_COL1, newname);
-                values.put(DBContract.Table1.COLUMN_NAME_COL2, newtype);
-                long newRowId;
-                newRowId = db.insert(
-                        DBContract.Table1.TABLE_NAME,
-                        null,
-                        values);
-
+                Toast.makeText(ActivityPanel.this, "Created Activity " + text, Toast.LENGTH_SHORT).show();
+                activitylist.add(text);
+/////////////////////
                 finish();
                 startActivity(getIntent());
-                db.close();
-                */
-                }
+
+          }
         });
+        Button button1 = (Button) dialog.findViewById(R.id.dialog_cancelac);
+        button1.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                finish();
+                startActivity(getIntent());
+            }
+        });
+
+        dialog.show();
+
+
     }
 }

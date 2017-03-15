@@ -14,4 +14,12 @@
     <string name="dialog_new_shift">You will now create a new shift. Press OK to enter Activity Panel.</string>
     <string name="ok">Ok</string>
     <string name="add_activity">Add New Activity</string>
+    <string-array name="actype_array">
+        <item>Production</item>
+        <item>Downtime</item>
+        <item>Standby</item>
+        <item>Maintenance</item>
+    </string-array>
+    <string name="add_ac_name">Add New Activity</string>
+
 </resources>

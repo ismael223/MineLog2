@@ -8,14 +8,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.miningapplicationx.minelog2.ActivityPanel">
-    <Button
-        android:id="@+id/add_activity"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/add_activity"
-        android:layout_gravity="bottom"
-        android:onClick="add_activity"
-        />
+
     <GridView
         android:id="@+id/activity_view"
         android:numColumns="2"
@@ -28,5 +21,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </GridView>
+    <Button
+        android:id="@+id/add_activity"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/add_activity"
+        android:layout_gravity="bottom"
+        android:layout_alignBottom="@+id/activity_view"
+        android:onClick="add_activity_new"
+        />
+
 
 </RelativeLayout>

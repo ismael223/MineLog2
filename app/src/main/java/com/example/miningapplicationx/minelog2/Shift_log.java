@@ -37,6 +37,7 @@ public class Shift_log extends AppCompatActivity {
     public final DBHelper dbHelper = new DBHelper(Shift_log.this);
     public String placeholder;
     public final String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
+    public static String eqdbname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +48,85 @@ public class Shift_log extends AppCompatActivity {
         String message = bundle.getString("message");
         placeholder=message;
         setTitle("Shift log for " + placeholder);
+
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        eqdbname = message +"aclist";
+        ContentValues values = new ContentValues();
+        values.put("ACTIVITY","End Shift");
+        values.put("TYPE","E");
+        long newRowId;
+        newRowId = db.insert(
+                eqdbname,
+                null,
+                values);
+        values.put("ACTIVITY","Maintenance");
+        values.put("TYPE","D");
+        long newRowId1;
+        newRowId = db.insert(
+                eqdbname,
+                null,
+                values);
+        values.put("ACTIVITY","Downtime");
+        values.put("TYPE","D");
+        long newRowId2;
+        newRowId = db.insert(
+                eqdbname,
+                null,
+                values);
+        values.put("ACTIVITY","Standby");
+        values.put("TYPE","D");
+        long newRowId3;
+        newRowId = db.insert(
+                eqdbname,
+                null,
+                values);
+//initialization start
+        //sqlextract
+        Cursor cursor = db.rawQuery("SELECT * FROM EQUIPMENTLOG WHERE EQUIPMENTNAME = '" + message +"'", null);
+        cursor.moveToFirst();
+        String uname1 = cursor.getString(cursor.getColumnIndex("EQUIPMENTTYPE"));
+        String truck="truck";String truck1="Truck";String shovel="shovel"; String shovel1="Shovel";
+        //sqlextract close
+        if (uname1.equals(truck)||uname1.equals(truck1)){
+            values.put("ACTIVITY","Travelling");
+            values.put("TYPE","P");
+            long newRowId4;
+            newRowId = db.insert(
+                    eqdbname,
+                    null,
+                    values);
+            values.put("ACTIVITY","Loading");
+            values.put("TYPE","P");
+            long newRowId5;
+            newRowId = db.insert(
+                    eqdbname,
+                    null,
+                    values);
+        }
+        else if (uname1.equals(shovel)||uname1.equals(shovel1))
+        {
+            values.put("ACTIVITY","Travelling");
+            values.put("TYPE","P");
+            long newRowId6;
+            newRowId = db.insert(
+                    eqdbname,
+                    null,
+                    values);
+            values.put("ACTIVITY","Shovelling");
+            values.put("TYPE","P");
+            long newRowId7;
+            newRowId = db.insert(
+                    eqdbname,
+                    null,
+                    values);
+        }
+        else{
+        }
         LinearLayout myLayout = (LinearLayout) findViewById(R.id.shift_list);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 //SQLEXTRACT
 
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + placeholder, null);
+        cursor = db.rawQuery("SELECT * FROM " + placeholder, null);
         String[] shifts = new String[cursor.getCount()];
         int i = 0;
         while(cursor.moveToNext()){
