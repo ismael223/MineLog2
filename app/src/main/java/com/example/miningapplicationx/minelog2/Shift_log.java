@@ -12,6 +12,7 @@ import android.provider.BaseColumns;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,7 +39,7 @@ public class Shift_log extends AppCompatActivity {
     public String placeholder;
     public final String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
     public static String eqdbname;
-
+    public static String uname1;
     public static String equip_name;
     public static String shift_spec;
     public static String datetodb;
@@ -90,7 +91,7 @@ public class Shift_log extends AppCompatActivity {
         //sqlextract
         Cursor cursor = db.rawQuery("SELECT * FROM EQUIPMENTLOG WHERE EQUIPMENTNAME = '" + message +"'", null);
         cursor.moveToFirst();
-        String uname1 = cursor.getString(cursor.getColumnIndex("EQUIPMENTTYPE"));
+        uname1 = cursor.getString(cursor.getColumnIndex("EQUIPMENTTYPE"));
         String truck="truck";String truck1="Truck";String shovel="shovel"; String shovel1="Shovel";
         //sqlextract close
         if (uname1.equals(truck)||uname1.equals(truck1)){
@@ -218,19 +219,23 @@ public class Shift_log extends AppCompatActivity {
         String fileName = dbname+".csv";
         String filePath = baseDir + File.separator+ "Download" + File.separator+ fileName;
         File f = new File(filePath);
+        data.add(new String[] {"Equipment", placeholder});
+        data.add(new String[] {"Type", uname1});
+        data.add(new String[] {"Date", datetodb});
+        data.add(new String[] {"Log Entry", lognum});
 
         Cursor cursor = db.query(dbname, new String[]{"ACTIVITY","TIME","TYPE"},null, null, null, null, null);
-        cursor.moveToFirst();
-        String[] fieldToAdd={null,null,null};
 
-        while(cursor.moveToNext()){
-            fieldToAdd[0]= cursor.getString(0);
-            fieldToAdd[1] = cursor.getString(1);
-            fieldToAdd[2] = cursor.getString(2);
-            data.add(fieldToAdd);
+        if(cursor.moveToFirst());
+        {
+            while (cursor.moveToNext()) {
+                data.add(new String[] {cursor.getString(0), cursor.getString(1),cursor.getString(2)});
+            }
         }
         cursor.close();
-        try {
+        db.close();
+
+       try {
             CSVWriter writer = new CSVWriter(new FileWriter(f));
             writer.writeAll(data);
             writer.close();
