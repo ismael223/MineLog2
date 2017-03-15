@@ -229,7 +229,7 @@ public class Shift_log extends AppCompatActivity {
         if(cursor.moveToFirst());
         {
             while (cursor.moveToNext()) {
-                data.add(new String[] {cursor.getString(0), cursor.getString(1),cursor.getString(2)});
+                data.add(new String[] {cursor.getString(2), cursor.getString(0),cursor.getString(1)});
             }
         }
         cursor.close();
