@@ -22,6 +22,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.security.Timestamp;
 import java.util.ArrayList;
 
 import static android.graphics.Color.parseColor;
@@ -73,7 +74,17 @@ public class ActivityPanel extends AppCompatActivity {
         activityView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //TODO: Add functions here for activity recording
+                //Time in Milli seconds
+                Long ts = System.currentTimeMillis();
+                String activity_time_str = ts.toString();
+
+                //Activity_name
+                String activity_name = (String) ((TextView) view).getText();
+
+                //TODO : get the type of the activity
+
+                //Toast.makeText(getApplicationContext(), ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), activity_time_str+" "+activity_name, Toast.LENGTH_SHORT).show();
 
             }
         });
