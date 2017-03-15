@@ -34,6 +34,11 @@ public class ActivityPanel extends AppCompatActivity {
     public ArrayList<String> activitylist = new ArrayList<>();
     public static String eqdbname;
     public static String eqypenew;
+    public static String equip_name;
+    public static String shift_spec;
+    public static String date;
+    public static String lognum;
+    public static String dbname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +47,14 @@ public class ActivityPanel extends AppCompatActivity {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         Bundle bundle = getIntent().getExtras();
-        String equip_name = bundle.getString("message");
+        equip_name = bundle.getString("message");
+        shift_spec = bundle.getString("specshift");
+        date= shift_spec.substring(0,8);
+        lognum=shift_spec.substring(26,27);
         eqdbname = equip_name +"aclist";
+        dbname = equip_name +"_" + date +"_"+ "logentry" +lognum;
+        Toast.makeText(ActivityPanel.this, "Created Activity Log " + dbname, Toast.LENGTH_SHORT).show();
+
 
 
         Cursor cursor = db.rawQuery("SELECT * FROM " + eqdbname , null);
@@ -81,10 +92,27 @@ public class ActivityPanel extends AppCompatActivity {
                 //Activity_name
                 String activity_name = (String) ((TextView) view).getText();
 
-                //TODO : get the type of the activity
 
-                //Toast.makeText(getApplicationContext(), ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
-                Toast.makeText(getApplicationContext(), activity_time_str+" "+activity_name, Toast.LENGTH_SHORT).show();
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                Cursor cursor = db.rawQuery("SELECT * FROM " +eqdbname+ " WHERE ACTIVITY = '" + activity_name +"'", null);
+                cursor.moveToFirst();
+                String activity_type = cursor.getString(cursor.getColumnIndex("TYPE"));
+
+                ContentValues values = new ContentValues();
+                values.put("ACTIVITY", activity_name);
+                values.put("TIME",activity_time_str);
+                values.put("TYPE",activity_type);
+                long newRowId;
+                newRowId = db.insert(
+                        dbname,
+                        null,
+                        values);
+
+                Toast.makeText(getApplicationContext(), activity_time_str+" "+activity_name + activity_type, Toast.LENGTH_SHORT).show();
+
+
+                cursor.close();
+                db.close();
 
             }
         });

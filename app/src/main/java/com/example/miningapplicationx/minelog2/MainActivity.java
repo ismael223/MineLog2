@@ -41,7 +41,6 @@ import java.util.StringTokenizer;
 public class MainActivity extends AppCompatActivity {
     public static String newname;
     public static String newtype;
-    public static int tracker;
     public final DBHelper dbHelper = new DBHelper(MainActivity.this);
 
     @Override
@@ -73,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
             equipment[a].setLayoutParams(lp);
             equipment[a].setId(a);
             final int b = a;
-            tracker = b;
             equipment[a].setBackground(getResources().getDrawable(R.drawable.back));
             equipment[a].setText(equipments[a]);
             equipment[a].setTextColor(getResources().getColor(R.color.textcolor));

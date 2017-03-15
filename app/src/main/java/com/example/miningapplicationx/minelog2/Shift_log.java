@@ -39,6 +39,12 @@ public class Shift_log extends AppCompatActivity {
     public final String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
     public static String eqdbname;
 
+    public static String equip_name;
+    public static String shift_spec;
+    public static String datetodb;
+    public static String lognum;
+    public static String dbname;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -137,12 +143,13 @@ public class Shift_log extends AppCompatActivity {
         cursor.close();
 //END SQL EXXTRACT
         int shiftsize = shifts.length;
-        TextView[] shift = new TextView[shiftsize];
+        final TextView[] shift = new TextView[shiftsize];
         for (int l = 0; l < (shiftsize); l++) {
             shift[l] = new TextView(this);
             shift[l].setTextSize(30);
             shift[l].setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             shift[l].setLayoutParams(lp);
+            final int b = l;
             shift[l].setId(l);
             shift[l].setBackground(getResources().getDrawable(R.drawable.back_shiftdone));
             shift[l].setTextColor(getResources().getColor(R.color.textcolor));
@@ -152,6 +159,7 @@ public class Shift_log extends AppCompatActivity {
                 public void onClick(View s) {
                     Intent shiftlog = new Intent(getApplicationContext(), ActivityPanel.class);
                     shiftlog.putExtra("message", placeholder);
+                    shiftlog.putExtra("specshift", shift[b].getText().toString());
                     startActivity(shiftlog);
                 }
             });
@@ -196,16 +204,32 @@ public class Shift_log extends AppCompatActivity {
     public void function3(int id) {
         Toast.makeText(this, "Shift Log Exported", Toast.LENGTH_SHORT).show();
 
+
+
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        List<String[]> data = new ArrayList<String[]>();
+        TextView tv = (TextView) this.findViewById(id);
+        shift_spec= tv.getText().toString();
+        datetodb= shift_spec.substring(0,8);
+        lognum=shift_spec.substring(26,27);
+        eqdbname = placeholder +"aclist";
+        dbname = placeholder +"_" + date +"_"+ "logentry" +lognum;
         String baseDir = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
-        String fileName = "AnalysisData" + placeholder +".csv";
+        String fileName = dbname+".csv";
         String filePath = baseDir + File.separator+ "Download" + File.separator+ fileName;
         File f = new File(filePath);
 
-        List<String[]> data = new ArrayList<String[]>();
-        data.add(new String[] {"India", "New Delhi"});
-        data.add(new String[] {"United States", "Washington D.C"});
-        data.add(new String[] {"Germany", "Berlin"});
+        Cursor cursor = db.query(dbname, new String[]{"ACTIVITY","TIME","TYPE"},null, null, null, null, null);
+        cursor.moveToFirst();
+        String[] fieldToAdd={null,null,null};
 
+        while(cursor.moveToNext()){
+            fieldToAdd[0]= cursor.getString(0);
+            fieldToAdd[1] = cursor.getString(1);
+            fieldToAdd[2] = cursor.getString(2);
+            data.add(fieldToAdd);
+        }
+        cursor.close();
         try {
             CSVWriter writer = new CSVWriter(new FileWriter(f));
             writer.writeAll(data);
@@ -241,6 +265,14 @@ public class Shift_log extends AppCompatActivity {
 
                     String selection = "EQSHIFTID" + " LIKE ?";
                     String[] selectionArgs = { String.valueOf(uId) };
+
+                    datetodb= shifts.substring(0,8);
+                    lognum=shifts.substring(26,27);
+                    eqdbname = placeholder +"aclist";
+                    dbname = placeholder +"_" + date +"_"+ "logentry" +lognum;
+                    dbHelper.AddActivityLog(dbname);
+
+                Toast.makeText(Shift_log.this, "Created Database " + dbname, Toast.LENGTH_SHORT).show();
 
                     int count = db.update(
                             placeholder,
