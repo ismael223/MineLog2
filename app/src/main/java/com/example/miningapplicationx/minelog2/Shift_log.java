@@ -228,6 +228,7 @@ public class Shift_log extends AppCompatActivity {
 
         if(cursor.moveToFirst());
         {
+            data.add(new String[] {cursor.getString(2), cursor.getString(0), cursor.getString(1)});
             while (cursor.moveToNext()) {
                 data.add(new String[] {cursor.getString(2), cursor.getString(0),cursor.getString(1)});
             }
