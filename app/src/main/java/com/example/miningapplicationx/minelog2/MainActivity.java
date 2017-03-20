@@ -25,10 +25,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewDebug;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -192,6 +195,31 @@ public class MainActivity extends AppCompatActivity {
 
         final Dialog dialog = new Dialog(MainActivity.this);
         dialog.setContentView(R.layout.dialog_equipment_add);
+        Spinner spinner = (Spinner) dialog.findViewById(R.id.neq_type);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.eqtype_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                String text_type =  parent.getItemAtPosition(position).toString();
+                newtype=text_type;
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                String text_type = parent.getSelectedItem().toString();
+                newtype=text_type;
+
+
+            }
+        });
+
 
         Button button = (Button) dialog.findViewById(R.id.dialog_ok);
         button.setOnClickListener(new View.OnClickListener() {
@@ -199,27 +227,21 @@ public class MainActivity extends AppCompatActivity {
 
                 EditText edit = (EditText) dialog.findViewById(R.id.new_eq_name);
                 String text = edit.getText().toString();
+
                 if (TextUtils.isEmpty(text)) {
                     edit.setError("This field cannot be empty.");
                     return;
                 }
 
-                EditText edit_type = (EditText) dialog.findViewById(R.id.new_eq_type);
-                String text_type = edit_type.getText().toString();
-                if (TextUtils.isEmpty(text_type)) {
-                    edit_type.setError("This field cannot be empty.");
-                    return;
-                }
 
                 SQLiteDatabase db1 = dbHelper.getReadableDatabase();
                 dbHelper.AddDesiredTable(text);
                 dbHelper.AddActivityList(text+"aclist");
-                Toast.makeText(MainActivity.this, "Created Equipment " +text, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Created Equipment " + newtype, Toast.LENGTH_SHORT).show();
                 db1.close();
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
                 dialog.dismiss();
                 newname = text;
-                newtype = text_type;
                 ContentValues values = new ContentValues();
 
                 values.put(DBContract.Table1.COLUMN_NAME_COL1, newname);

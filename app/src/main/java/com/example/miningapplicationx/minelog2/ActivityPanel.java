@@ -2,10 +2,13 @@ package com.example.miningapplicationx.minelog2;
 
 import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -89,7 +92,23 @@ public class ActivityPanel extends AppCompatActivity {
 
                 //Activity_name
                 String activity_name = (String) ((TextView) view).getText();
-
+                if (activity_name.equals("End Shift")){
+                    new AlertDialog.Builder(ActivityPanel.this)
+                            .setTitle("End Shift")
+                            .setMessage("Are you sure you want End Shift?")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                    startActivity(getIntent());
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
 
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
                 Cursor cursor = db.rawQuery("SELECT * FROM " +eqdbname+ " WHERE ACTIVITY = '" + activity_name +"'", null);
@@ -117,6 +136,8 @@ public class ActivityPanel extends AppCompatActivity {
 
         final Dialog dialog = new Dialog(ActivityPanel.this);
         dialog.setContentView(R.layout.dialog_activity_add);
+
+
         Spinner spinner = (Spinner)dialog.findViewById(R.id.ac_type);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -182,5 +203,25 @@ public class ActivityPanel extends AppCompatActivity {
         dialog.show();
 
 
+    }
+
+    public void onBackPressed() {
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(
+                ActivityPanel.this);
+
+        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+
+        alertDialog.setNegativeButton("No", null);
+
+        alertDialog.setMessage("Do you want to exit?");
+        alertDialog.setTitle("AppTitle");
+        alertDialog.show();
     }
 }
