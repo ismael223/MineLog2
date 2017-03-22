@@ -54,8 +54,11 @@ public class ActivityPanel extends AppCompatActivity {
         shift_spec = bundle.getString("specshift");
         date= shift_spec.substring(0,8);
         lognum=shift_spec.substring(26,27);
-        eqdbname = equip_name +"aclist";
-        dbname = equip_name +"_" + date +"_"+ "logentry" +lognum;
+        StringBuilder builder = new StringBuilder(equip_name);
+        builder.deleteCharAt(0);
+        builder.deleteCharAt(equip_name.length()-2);
+        eqdbname = "'" + builder.toString() +"aclist'";
+        dbname = "'" +builder.toString() +"_" + date +"_"+ "logentry" +lognum+"'";
 
 
         Cursor cursor = db.rawQuery("SELECT * FROM " + eqdbname , null);

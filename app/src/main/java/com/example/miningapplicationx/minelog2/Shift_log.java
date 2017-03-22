@@ -54,11 +54,11 @@ public class Shift_log extends AppCompatActivity {
         setContentView(R.layout.activity_shift_log);
         Bundle bundle = getIntent().getExtras();
         String message = bundle.getString("message");
-        placeholder=message;
+        placeholder="'"+message+"'";
         setTitle("Shift log for " + placeholder);
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        eqdbname = message +"aclist";
+        eqdbname = "'" + message +"aclist'";
         ContentValues values = new ContentValues();
         values.put("ACTIVITY","End Shift");
         values.put("TYPE","E");
@@ -214,8 +214,12 @@ public class Shift_log extends AppCompatActivity {
         shift_spec= tv.getText().toString();
         datetodb= shift_spec.substring(0,8);
         lognum=shift_spec.substring(26,27);
-        eqdbname = placeholder +"aclist";
-        dbname = placeholder +"_" + date +"_"+ "logentry" +lognum;
+
+        StringBuilder builder = new StringBuilder(placeholder);
+        builder.deleteCharAt(0);
+        builder.deleteCharAt(placeholder.length()-2);
+        eqdbname = "'"+builder.toString() +"aclist'";
+        dbname = "'"+builder.toString() +"_" + date +"_"+ "logentry" +lognum+"'";
         String baseDir = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
         String fileName = dbname+".csv";
         String filePath = baseDir + File.separator+ "Download" + File.separator+ fileName;
@@ -303,8 +307,12 @@ public class Shift_log extends AppCompatActivity {
 
                     datetodb= shifts.substring(0,8);
                     lognum=shifts.substring(26,27);
-                    eqdbname = placeholder +"aclist";
-                    dbname = placeholder +"_" + date +"_"+ "logentry" +lognum;
+                    StringBuilder builder = new StringBuilder(placeholder);
+                    builder.deleteCharAt(0);
+                    builder.deleteCharAt(placeholder.length()-2);
+
+                    eqdbname = builder.toString() +"aclist";
+                    dbname = builder.toString() +"_" + date +"_"+ "logentry" +lognum;
                     dbHelper.AddActivityLog(dbname);
 
 

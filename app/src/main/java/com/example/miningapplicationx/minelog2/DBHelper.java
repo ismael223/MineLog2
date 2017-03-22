@@ -27,7 +27,7 @@ import android.database.sqlite.SQLiteOpenHelper;
         String KEY_2TBL="EQSHIFTMD";
         String KEY_ONE="EQNUM";
     /*then call 'execSQL()' on it. Don't forget about using TableName Variable as tablename.*/
-        ourDatabase.execSQL("CREATE TABLE IF NOT EXISTS " + TableNmae+ " ("
+        ourDatabase.execSQL("CREATE TABLE IF NOT EXISTS '" + TableNmae+ "' ("
                 + KEY_ROWID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_2TBL
                 + " TEXT NOT NULL, " + KEY_ONE + " INTEGER, " + "UNIQUE("+KEY_2TBL+"));");
     }
@@ -39,7 +39,7 @@ import android.database.sqlite.SQLiteOpenHelper;
         String KEY_ONE="TIME";
         String KEY_TWO="TYPE";
     /*then call 'execSQL()' on it. Don't forget about using TableName Variable as tablename.*/
-        ourDatabase.execSQL("CREATE TABLE IF NOT EXISTS " + TableNmae+ " ("
+        ourDatabase.execSQL("CREATE TABLE IF NOT EXISTS '" + TableNmae+ "' ("
                 + KEY_ROWID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_2TBL
                 + " TEXT NOT NULL, " + KEY_ONE + " TEXT NOT NULL, " +KEY_TWO + " TEXT NOT NULL);");
     }
@@ -50,7 +50,7 @@ import android.database.sqlite.SQLiteOpenHelper;
         String KEY_2TBL="ACTIVITY";
         String KEY_ONE="TYPE";
     /*then call 'execSQL()' on it. Don't forget about using TableName Variable as tablename.*/
-        ourDatabase.execSQL("CREATE TABLE IF NOT EXISTS " + TableNmae+ " ("
+        ourDatabase.execSQL("CREATE TABLE IF NOT EXISTS '" + TableNmae+ "' ("
                 + KEY_ROWID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_2TBL
                 + " TEXT NOT NULL, " + KEY_ONE +  " TEXT NOT NULL, " +
                 "UNIQUE("+KEY_2TBL+"));");

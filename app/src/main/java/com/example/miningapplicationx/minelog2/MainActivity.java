@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
                 ContentValues values = new ContentValues();
-                values.put(DBContract.Table1.COLUMN_NAME_COL1, text);
+                values.put(DBContract.Table1.COLUMN_NAME_COL1, "'" + text+ "'");
 
                 String selection = DBContract.Table1._ID + " LIKE ?";
                 String[] selectionArgs = {String.valueOf(thisid + 1)};
@@ -151,11 +151,13 @@ public class MainActivity extends AppCompatActivity {
 
                 db.beginTransaction();
                 try {
-                    db.execSQL("ALTER TABLE " + myoldString + " RENAME TO " + text + ";");
+                    db.execSQL("ALTER TABLE " + myoldString + " RENAME TO '" + text + "';");
                     db.setTransactionSuccessful();
                 } finally {
                     db.endTransaction();
                 }
+                dbHelper.AddDesiredTable(text);
+                dbHelper.AddActivityList(text+"aclist");
 
                 db.close();
 
