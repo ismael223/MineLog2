@@ -21,38 +21,44 @@ import android.database.sqlite.SQLiteOpenHelper;
         onCreate(db);
     }
     public void AddDesiredTable(String TableNmae){
-    /*At first you will need a Database object.Lets create it.*/
         SQLiteDatabase ourDatabase=this.getWritableDatabase();
         String KEY_ROWID="EQSHIFTID";
         String KEY_2TBL="EQSHIFTMD";
         String KEY_ONE="EQNUM";
-    /*then call 'execSQL()' on it. Don't forget about using TableName Variable as tablename.*/
         ourDatabase.execSQL("CREATE TABLE IF NOT EXISTS '" + TableNmae+ "' ("
                 + KEY_ROWID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_2TBL
                 + " TEXT NOT NULL, " + KEY_ONE + " INTEGER, " + "UNIQUE("+KEY_2TBL+"));");
     }
     public void AddActivityLog(String TableNmae){
-    /*At first you will need a Database object.Lets create it.*/
         SQLiteDatabase ourDatabase=this.getWritableDatabase();
         String KEY_ROWID="AID";
         String KEY_2TBL="ACTIVITY";
         String KEY_ONE="TIME";
         String KEY_TWO="TYPE";
-    /*then call 'execSQL()' on it. Don't forget about using TableName Variable as tablename.*/
         ourDatabase.execSQL("CREATE TABLE IF NOT EXISTS '" + TableNmae+ "' ("
                 + KEY_ROWID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_2TBL
                 + " TEXT NOT NULL, " + KEY_ONE + " TEXT NOT NULL, " +KEY_TWO + " TEXT NOT NULL);");
     }
     public void AddActivityList(String TableNmae){
-    /*At first you will need a Database object.Lets create it.*/
         SQLiteDatabase ourDatabase=this.getWritableDatabase();
         String KEY_ROWID="AID";
         String KEY_2TBL="ACTIVITY";
         String KEY_ONE="TYPE";
-    /*then call 'execSQL()' on it. Don't forget about using TableName Variable as tablename.*/
         ourDatabase.execSQL("CREATE TABLE IF NOT EXISTS '" + TableNmae+ "' ("
                 + KEY_ROWID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_2TBL
                 + " TEXT NOT NULL, " + KEY_ONE +  " TEXT NOT NULL, " +
                 "UNIQUE("+KEY_2TBL+"));");
+    }
+    public void UsernameTables(){
+
+        SQLiteDatabase ourDatabase=this.getWritableDatabase();
+        String KEY_ROWID="ID";
+        String KEY_2TBL="USERNAME";
+        String KEY_ONE="PASSWORD";
+        ourDatabase.execSQL("CREATE TABLE IF NOT EXISTS 'USERNAMETABLE' ("
+                + KEY_ROWID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_2TBL
+                + " TEXT NOT NULL, " + KEY_ONE +  " TEXT NOT NULL, " +
+                "UNIQUE("+KEY_2TBL+"));");
+
     }
 }

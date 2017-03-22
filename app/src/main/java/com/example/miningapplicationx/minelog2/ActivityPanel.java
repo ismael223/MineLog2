@@ -54,11 +54,8 @@ public class ActivityPanel extends AppCompatActivity {
         shift_spec = bundle.getString("specshift");
         date= shift_spec.substring(0,8);
         lognum=shift_spec.substring(26,27);
-        StringBuilder builder = new StringBuilder(equip_name);
-        builder.deleteCharAt(0);
-        builder.deleteCharAt(equip_name.length()-2);
-        eqdbname = "'" + builder.toString() +"aclist'";
-        dbname = "'" +builder.toString() +"_" + date +"_"+ "logentry" +lognum+"'";
+        eqdbname = equip_name +"aclist";
+        dbname = equip_name +"_" + date +"_"+ "logentry" +lognum;
 
 
         Cursor cursor = db.rawQuery("SELECT * FROM " + eqdbname , null);
@@ -98,9 +95,12 @@ public class ActivityPanel extends AppCompatActivity {
                 if (activity_name.equals("End Shift")){
                     new AlertDialog.Builder(ActivityPanel.this)
                             .setTitle("End Shift")
-                            .setMessage("Are you sure you want End Shift?")
+                            .setMessage("Are you sure you want End Shift? \n You will be redirected to the Shift Log page.")
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
+                                    Intent shift_log = new Intent(getApplicationContext(), Shift_log.class);
+                                    shift_log.putExtra("message",equip_name);
+                                    startActivity(shift_log);
                                 }
                             })
                             .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -217,14 +217,17 @@ public class ActivityPanel extends AppCompatActivity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                Intent login_page= new Intent(getApplicationContext(), LoginActivity.class);
+
                 finish();
+                startActivity(login_page);
             }
         });
 
         alertDialog.setNegativeButton("No", null);
 
-        alertDialog.setMessage("Do you want to exit?");
-        alertDialog.setTitle("AppTitle");
+        alertDialog.setMessage("Do you want to exit?\nYou will be redirected to the Login Page.");
+        alertDialog.setTitle("Exit");
         alertDialog.show();
     }
 }

@@ -134,11 +134,14 @@ public class MainActivity extends AppCompatActivity {
                 String text = edit.getText().toString();
 
                 if (TextUtils.isEmpty(text)) {
-                    edit.setError("This field cannot be empty.");
+                    edit.setError("This field cannot be empty");
+                    return;
+                }else if(Character.isDigit(text.charAt(0))) {
+                    edit.setError("Equipment Name cannot start with a number");
                     return;
                 }
                 ContentValues values = new ContentValues();
-                values.put(DBContract.Table1.COLUMN_NAME_COL1, "'" + text+ "'");
+                values.put(DBContract.Table1.COLUMN_NAME_COL1,  text);
 
                 String selection = DBContract.Table1._ID + " LIKE ?";
                 String[] selectionArgs = {String.valueOf(thisid + 1)};
@@ -151,13 +154,14 @@ public class MainActivity extends AppCompatActivity {
 
                 db.beginTransaction();
                 try {
-                    db.execSQL("ALTER TABLE " + myoldString + " RENAME TO '" + text + "';");
+                    db.execSQL("ALTER TABLE " + myoldString + " RENAME TO " + text + ";");
                     db.setTransactionSuccessful();
                 } finally {
                     db.endTransaction();
                 }
+
                 dbHelper.AddDesiredTable(text);
-                dbHelper.AddActivityList(text+"aclist");
+                dbHelper.AddActivityList(text+"aclist" );
 
                 db.close();
 
@@ -233,19 +237,20 @@ public class MainActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(text)) {
                     edit.setError("This field cannot be empty.");
                     return;
+                }else if(Character.isDigit(text.charAt(0))) {
+                    edit.setError("Equipment Name cannot start with a number");
+                    return;
                 }
 
 
                 SQLiteDatabase db1 = dbHelper.getReadableDatabase();
                 dbHelper.AddDesiredTable(text);
                 dbHelper.AddActivityList(text+"aclist");
-                Toast.makeText(MainActivity.this, "Created Equipment " + newtype, Toast.LENGTH_SHORT).show();
                 db1.close();
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
                 dialog.dismiss();
                 newname = text;
                 ContentValues values = new ContentValues();
-
                 values.put(DBContract.Table1.COLUMN_NAME_COL1, newname);
                 values.put(DBContract.Table1.COLUMN_NAME_COL2, newtype);
                 long newRowId;
@@ -257,6 +262,9 @@ public class MainActivity extends AppCompatActivity {
                 finish();
                 startActivity(getIntent());
                 db.close();
+
+                Toast.makeText(MainActivity.this, "Created Equipment " + newname, Toast.LENGTH_SHORT).show();
+
             }
         });
         Button button1 = (Button) dialog.findViewById(R.id.dialog_cancel);

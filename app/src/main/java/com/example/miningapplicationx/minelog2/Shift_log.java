@@ -54,11 +54,11 @@ public class Shift_log extends AppCompatActivity {
         setContentView(R.layout.activity_shift_log);
         Bundle bundle = getIntent().getExtras();
         String message = bundle.getString("message");
-        placeholder="'"+message+"'";
+        placeholder=message;
         setTitle("Shift log for " + placeholder);
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        eqdbname = "'" + message +"aclist'";
+        eqdbname =  message +"aclist";
         ContentValues values = new ContentValues();
         values.put("ACTIVITY","End Shift");
         values.put("TYPE","E");
@@ -90,7 +90,7 @@ public class Shift_log extends AppCompatActivity {
                 values);
 //initialization start
         //sqlextract
-        Cursor cursor = db.rawQuery("SELECT * FROM EQUIPMENTLOG WHERE EQUIPMENTNAME = '" + message +"'", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM EQUIPMENTLOG WHERE EQUIPMENTNAME = '" + message + "'", null);
         cursor.moveToFirst();
         uname1 = cursor.getString(cursor.getColumnIndex("EQUIPMENTTYPE"));
         String truck1="Truck"; String shovel1="Shovel";
@@ -169,7 +169,6 @@ public class Shift_log extends AppCompatActivity {
             registerForContextMenu(shift[l]);
         }
 
-        Toast.makeText(this, "Log Import Successful from " + placeholder + date, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -215,11 +214,8 @@ public class Shift_log extends AppCompatActivity {
         datetodb= shift_spec.substring(0,8);
         lognum=shift_spec.substring(26,27);
 
-        StringBuilder builder = new StringBuilder(placeholder);
-        builder.deleteCharAt(0);
-        builder.deleteCharAt(placeholder.length()-2);
-        eqdbname = "'"+builder.toString() +"aclist'";
-        dbname = "'"+builder.toString() +"_" + date +"_"+ "logentry" +lognum+"'";
+        eqdbname = placeholder +"aclist";
+        dbname = placeholder +"_" + date +"_"+ "logentry" +lognum;
         String baseDir = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
         String fileName = dbname+".csv";
         String filePath = baseDir + File.separator+ "Download" + File.separator+ fileName;
@@ -307,12 +303,8 @@ public class Shift_log extends AppCompatActivity {
 
                     datetodb= shifts.substring(0,8);
                     lognum=shifts.substring(26,27);
-                    StringBuilder builder = new StringBuilder(placeholder);
-                    builder.deleteCharAt(0);
-                    builder.deleteCharAt(placeholder.length()-2);
-
-                    eqdbname = builder.toString() +"aclist";
-                    dbname = builder.toString() +"_" + date +"_"+ "logentry" +lognum;
+                    eqdbname = placeholder +"aclist";
+                    dbname = placeholder +"_" + date +"_"+ "logentry" +lognum;
                     dbHelper.AddActivityLog(dbname);
 
 
@@ -329,6 +321,8 @@ public class Shift_log extends AppCompatActivity {
                  catch(Exception e){
                      Toast.makeText(Shift_log.this, "Duplicates Error  " + date, Toast.LENGTH_SHORT).show();
                      db.delete(placeholder,"EQSHIFTMD=? ",new String[]{date});
+                     // TODO duplicates error here
+
                      finish();
                      startActivity(getIntent());
                 }
@@ -343,7 +337,7 @@ public class Shift_log extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-        builder.setNegativeButton("Cancel New Shift", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();
             }
