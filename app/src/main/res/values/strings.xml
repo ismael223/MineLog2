@@ -41,5 +41,7 @@
         completions."
     </string>
     <string name="error_email_not_in_db">Username not found</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="prompt_password_edit">Enter Valid Password</string>
 
 </resources>

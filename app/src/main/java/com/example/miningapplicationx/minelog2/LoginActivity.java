@@ -84,6 +84,14 @@ public class LoginActivity extends AppCompatActivity {
                 "USERNAMETABLE",
                 null,
                 values);
+        ContentValues values1 = new ContentValues();
+        values1.put("USERNAME", "engineer");
+        values1.put("PASSWORD", "mining");
+        long newRowId1;
+        newRowId = db.insert(
+                "USERNAMETABLE",
+                null,
+                values1);
 
         db.close();
 
@@ -129,7 +137,7 @@ public class LoginActivity extends AppCompatActivity {
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
+        final String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
@@ -166,6 +174,35 @@ public class LoginActivity extends AppCompatActivity {
             mEmailView.setError(getString(R.string.error_email_not_in_db));
             focusView = mEmailView;
             cancel = true;
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(
+                    LoginActivity.this);
+
+            alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+                    ContentValues values = new ContentValues();
+                    values.put("USERNAME", email);
+                    values.put("PASSWORD", "abcde");
+                    long newRowId;
+                    newRowId = db.insert(
+                            "USERNAMETABLE",
+                            null,
+                            values);
+                    Intent login_page= new Intent(getApplicationContext(), LoginActivity.class);
+                    finish();
+                    startActivity(login_page);
+                    db.close();
+                }
+            });
+
+            alertDialog.setNegativeButton("No", null);
+
+            alertDialog.setMessage("Username not found.\n Would you like to register this user name?\n(password will be set to: abcde)");
+            alertDialog.setTitle("Exit");
+            alertDialog.show();
         }
 
         if (cancel) {
@@ -277,6 +314,8 @@ public class LoginActivity extends AppCompatActivity {
 
             if (success) {
                 Intent main_act = new Intent(getApplicationContext(),MainActivity.class);
+                main_act.putExtra("user",mEmail);
+                main_act.putExtra("pass",mPassword);
                 finish();
                 startActivity(main_act);
             } else {

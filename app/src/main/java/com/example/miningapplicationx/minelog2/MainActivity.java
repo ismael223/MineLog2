@@ -46,13 +46,21 @@ public class MainActivity extends AppCompatActivity {
     public static String newtype;
     public final DBHelper dbHelper = new DBHelper(MainActivity.this);
 
+    public static String user;
+    public static String pass;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle bundle = getIntent().getExtras();
+        user = bundle.getString("user");
+        pass = bundle.getString("pass");
         setContentView(R.layout.activity_main);
+
         LinearLayout myLayout = (LinearLayout) findViewById(R.id.equipment_list);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
+        setTitle("Mine Log (" + user +" is logged in)");
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
 /*SQL EXTRACT*/
@@ -115,8 +123,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
-
-    //Add EQ
+//EDIT EQ
     public void function1(int id) {
         final Dialog dialog1 = new Dialog(MainActivity.this);
 
@@ -133,13 +140,20 @@ public class MainActivity extends AppCompatActivity {
                 EditText edit = (EditText) dialog1.findViewById(R.id.username);
                 String text = edit.getText().toString();
 
+                EditText edit1 = (EditText) dialog1.findViewById(R.id.edit_pass_auth);
+                String edit_pass = edit1.getText().toString();
+
                 if (TextUtils.isEmpty(text)) {
                     edit.setError("This field cannot be empty");
                     return;
                 }else if(Character.isDigit(text.charAt(0))) {
                     edit.setError("Equipment Name cannot start with a number");
                     return;
+                }else if(!edit_pass.equals(pass)){
+                    edit1.setError("Incorrect Password");
+                    return;
                 }
+
                 ContentValues values = new ContentValues();
                 values.put(DBContract.Table1.COLUMN_NAME_COL1,  text);
 
@@ -177,26 +191,54 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(getIntent());
             }
         });
-
         dialog1.show();
 
     }
-//End Add Eq
+//End Edit Eq
 
-
+//Delete Equipment
     public void function2(int id) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        String idpass = String.valueOf(id);
         TextView tv = (TextView) this.findViewById(id);
-        String myString = tv.getText().toString();
-        Toast.makeText(this, "Deleted Equipment " + myString, Toast.LENGTH_SHORT).show();
-        db.delete("EQUIPMENTLOG", "EQUIPMENTNAME=? ", new String[]{myString});
-        db.close();
-        finish();
-        startActivity(getIntent());
-    }
+        final String myString = tv.getText().toString();
+        final Dialog dialog1 = new Dialog(MainActivity.this);
+        dialog1.setContentView(R.layout.dialog_delete_auth);
 
-    //ADDEQ
+        Button button = (Button) dialog1.findViewById(R.id.dialog_ok_delete);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                EditText edit = (EditText) dialog1.findViewById(R.id.pass_auth);
+                String text = edit.getText().toString();
+
+                if (TextUtils.isEmpty(text)) {
+                    edit.setError("This field cannot be empty");
+                    return;
+                }
+
+                if (text.equals(pass)){
+                    db.delete("EQUIPMENTLOG", "EQUIPMENTNAME=? ", new String[]{myString});
+                    finish();
+                    startActivity(getIntent());
+                }else{
+                    edit.setError("Incorrect Password");
+                    return;
+                }
+                db.close();
+
+            }
+
+        });
+        Button button1 = (Button) dialog1.findViewById(R.id.dialog_cancel_pass_auth);
+        button1.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                finish();
+                startActivity(getIntent());
+            }
+        });
+        dialog1.show();
+    }
+//End Delete Equipment
+//Add Equipment
     public void function5(View s) {
 
         final Dialog dialog = new Dialog(MainActivity.this);
@@ -233,12 +275,17 @@ public class MainActivity extends AppCompatActivity {
 
                 EditText edit = (EditText) dialog.findViewById(R.id.new_eq_name);
                 String text = edit.getText().toString();
+                EditText edit1 = (EditText) dialog.findViewById(R.id.new_eq_auth);
+                String edit_pass = edit1.getText().toString();
 
                 if (TextUtils.isEmpty(text)) {
                     edit.setError("This field cannot be empty.");
                     return;
                 }else if(Character.isDigit(text.charAt(0))) {
                     edit.setError("Equipment Name cannot start with a number");
+                    return;
+                }else if(!edit_pass.equals(pass)){
+                    edit1.setError("Incorrect Password");
                     return;
                 }
 
@@ -278,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
 
     }
-
+//End Edit Equipment
     /*END DIALOGS*/
     protected void onDestroy() {
         dbHelper.close();

@@ -45,6 +45,7 @@ public class Shift_log extends AppCompatActivity {
     public static String datetodb;
     public static String lognum;
     public static String dbname;
+    public static String dbname_onclick;
     public static int previous_shift;
 
     @Override
@@ -162,6 +163,8 @@ public class Shift_log extends AppCompatActivity {
                     Intent shiftlog = new Intent(getApplicationContext(), ActivityPanel.class);
                     shiftlog.putExtra("message", placeholder);
                     shiftlog.putExtra("specshift", shift[b].getText().toString());
+                    dbname_onclick =  placeholder +"_" + shift[b].getText().toString().substring(0,8) +"_"+ "logentry" + shift[b].getText().toString().substring(26,27);
+                    dbHelper.AddActivityLog(dbname_onclick);
                     startActivity(shiftlog);
                 }
             });
@@ -263,7 +266,6 @@ public class Shift_log extends AppCompatActivity {
                     cursor = db.rawQuery("SELECT * FROM " + placeholder + " WHERE EQSHIFTID = (SELECT MAX (EQSHIFTID) FROM " + placeholder + ");",null);
                     cursor.moveToFirst();
                     previous_shift=cursor.getInt(cursor.getColumnIndex("EQNUM"));
-                    Toast.makeText(Shift_log.this,"Created " + previous_shift, Toast.LENGTH_SHORT).show();
                     db.setTransactionSuccessful();
                 }catch(Exception e){
                     previous_shift=0;
@@ -319,18 +321,14 @@ public class Shift_log extends AppCompatActivity {
                      db.setTransactionSuccessful();
                  }
                  catch(Exception e){
-                     Toast.makeText(Shift_log.this, "Duplicates Error  " + date, Toast.LENGTH_SHORT).show();
-                     db.delete(placeholder,"EQSHIFTMD=? ",new String[]{date});
-                     // TODO duplicates error here
+                     Toast.makeText(Shift_log.this, "Duplicates Error End Shift to return to Shift Log", Toast.LENGTH_SHORT).show();
 
-                     finish();
-                     startActivity(getIntent());
                 }
                 finally {
                      db.endTransaction();
                  }
                 cursor.close();
-
+                db.delete(placeholder,"EQSHIFTMD=? ",new String[]{date});
                 finish();
                 startActivity(getIntent());
                 db.close();
