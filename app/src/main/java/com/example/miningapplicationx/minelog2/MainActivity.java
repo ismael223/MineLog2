@@ -91,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     Intent shiftlog = new Intent(getApplicationContext(), Shift_log.class);
                     shiftlog.putExtra("message", equipment[b].getText().toString());
+                    shiftlog.putExtra("user",user);
+                    shiftlog.putExtra("pass",pass);
                     startActivity(shiftlog);
                 }
             });
@@ -149,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                 }else if(Character.isDigit(text.charAt(0))) {
                     edit.setError("Equipment Name cannot start with a number");
                     return;
-                }else if(!edit_pass.equals(pass)){
+                }else if(!edit_pass.equals("adminpass")){
                     edit1.setError("Incorrect Password");
                     return;
                 }
@@ -215,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                if (text.equals(pass)){
+                if (text.equals("adminpass")){
                     db.delete("EQUIPMENTLOG", "EQUIPMENTNAME=? ", new String[]{myString});
                     finish();
                     startActivity(getIntent());
@@ -284,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
                 }else if(Character.isDigit(text.charAt(0))) {
                     edit.setError("Equipment Name cannot start with a number");
                     return;
-                }else if(!edit_pass.equals(pass)){
+                }else if(!edit_pass.equals("adminpass")){
                     edit1.setError("Incorrect Password");
                     return;
                 }

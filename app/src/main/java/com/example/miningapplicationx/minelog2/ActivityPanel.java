@@ -42,6 +42,8 @@ public class ActivityPanel extends AppCompatActivity {
     public static String date;
     public static String lognum;
     public static String dbname;
+    public static String user;
+    public static String pass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,9 @@ public class ActivityPanel extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         equip_name = bundle.getString("message");
         shift_spec = bundle.getString("specshift");
+
+        user = bundle.getString("user");
+        pass = bundle.getString("pass");
         date= shift_spec.substring(0,8);
         lognum=shift_spec.substring(26,27);
         eqdbname = equip_name +"aclist";
@@ -100,6 +105,8 @@ public class ActivityPanel extends AppCompatActivity {
                                 public void onClick(DialogInterface dialog, int which) {
                                     Intent shift_log = new Intent(getApplicationContext(), Shift_log.class);
                                     shift_log.putExtra("message",equip_name);
+                                    shift_log.putExtra("user",user);
+                                    shift_log.putExtra("pass",pass);
                                     startActivity(shift_log);
                                 }
                             })
@@ -122,6 +129,7 @@ public class ActivityPanel extends AppCompatActivity {
                 values.put("ACTIVITY", activity_name);
                 values.put("TIME",activity_time_str);
                 values.put("TYPE",activity_type);
+                values.put("OPERATOR",user);
                 long newRowId;
                 newRowId = db.insert(
                         dbname,

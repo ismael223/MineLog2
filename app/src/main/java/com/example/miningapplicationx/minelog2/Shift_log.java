@@ -12,6 +12,7 @@ import android.provider.BaseColumns;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
@@ -48,6 +49,10 @@ public class Shift_log extends AppCompatActivity {
     public static String dbname_onclick;
     public static int previous_shift;
 
+    public static String user;
+    public static String pass;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -55,8 +60,10 @@ public class Shift_log extends AppCompatActivity {
         setContentView(R.layout.activity_shift_log);
         Bundle bundle = getIntent().getExtras();
         String message = bundle.getString("message");
+        user = bundle.getString("user");
+        pass = bundle.getString("pass");
         placeholder=message;
-        setTitle("Shift log for " + placeholder);
+        setTitle("Shift log for " + placeholder +" ("+user +")");
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         eqdbname =  message +"aclist";
@@ -83,7 +90,7 @@ public class Shift_log extends AppCompatActivity {
                 null,
                 values);
         values.put("ACTIVITY","Standby");
-        values.put("TYPE","D");
+        values.put("TYPE","I");
         long newRowId3;
         newRowId = db.insert(
                 eqdbname,
@@ -129,8 +136,6 @@ public class Shift_log extends AppCompatActivity {
                     null,
                     values);
         }
-        else{
-        }
         LinearLayout myLayout = (LinearLayout) findViewById(R.id.shift_list);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 //SQLEXTRACT
@@ -163,6 +168,8 @@ public class Shift_log extends AppCompatActivity {
                     Intent shiftlog = new Intent(getApplicationContext(), ActivityPanel.class);
                     shiftlog.putExtra("message", placeholder);
                     shiftlog.putExtra("specshift", shift[b].getText().toString());
+                    shiftlog.putExtra("user",user);
+                    shiftlog.putExtra("pass",pass);
                     dbname_onclick =  placeholder +"_" + shift[b].getText().toString().substring(0,8) +"_"+ "logentry" + shift[b].getText().toString().substring(26,27);
                     dbHelper.AddActivityLog(dbname_onclick);
                     startActivity(shiftlog);
@@ -195,14 +202,46 @@ public class Shift_log extends AppCompatActivity {
     }
 
     public void function2(int id) {
-        Toast.makeText(this, "Deleted Shift", Toast.LENGTH_SHORT).show();
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        final Dialog dialog1 = new Dialog(Shift_log.this);
+        dialog1.setContentView(R.layout.dialog_delete_auth);
         TextView tv = (TextView) this.findViewById(id);
-        String myString= tv.getText().toString();
-        db.delete(placeholder,"EQSHIFTMD=? ",new String[]{myString});
-        db.close();
-        finish();
-        startActivity(getIntent());
+
+        final String myString= tv.getText().toString();
+        Button button = (Button) dialog1.findViewById(R.id.dialog_ok_delete);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                EditText edit = (EditText) dialog1.findViewById(R.id.pass_auth);
+                String text = edit.getText().toString();
+
+                    if (TextUtils.isEmpty(text)) {
+                                edit.setError("This field cannot be empty");
+                                return;
+                            }
+                    if (text.equals("adminpass")) {
+                        db.delete(placeholder, "EQSHIFTMD=? ", new String[]{myString});
+                        finish();
+                        startActivity(getIntent());
+                    }else{
+                        edit.setError("Incorrect Password");
+                        return;
+                    }
+
+                            db.close();
+            }
+
+        });
+
+        Button button1 = (Button) dialog1.findViewById(R.id.dialog_cancel_pass_auth);
+        button1.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                finish();
+                startActivity(getIntent());
+            }
+
+        });
+        dialog1.show();
     }
 
     public void function3(int id) {
@@ -227,7 +266,7 @@ public class Shift_log extends AppCompatActivity {
         data.add(new String[] {"Type", uname1});
         data.add(new String[] {"Date", datetodb});
         data.add(new String[] {"Shift", lognum});
-        data.add(new String[] {"Type", "Activity", "Time Start", "Other"});
+        data.add(new String[] {"Type", "Activity", "Time Start", "Operator"});
 
         Cursor cursor = db.query(dbname, new String[]{"ACTIVITY","TIME","TYPE"},null, null, null, null, null);
 
@@ -235,7 +274,7 @@ public class Shift_log extends AppCompatActivity {
         {
             data.add(new String[] {cursor.getString(2), cursor.getString(0), cursor.getString(1)});
             while (cursor.moveToNext()) {
-                data.add(new String[] {cursor.getString(2), cursor.getString(0),cursor.getString(1)});
+                data.add(new String[] {cursor.getString(2), cursor.getString(0),cursor.getString(1),cursor.getString(3)});
             }
         }
         cursor.close();

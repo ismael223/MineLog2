@@ -46,19 +46,6 @@ public class LoginActivity extends AppCompatActivity {
     private static final int REQUEST_READ_CONTACTS = 0;
     public final DBHelper dbHelper = new DBHelper(LoginActivity.this);
 
-
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-
-
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "example.com:hello", "barexample.com:world"
-    };
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
     private UserLoginTask mAuthTask = null;
 
     // UI references.
@@ -79,6 +66,7 @@ public class LoginActivity extends AppCompatActivity {
         ContentValues values = new ContentValues();
         values.put("USERNAME", "admin");
         values.put("PASSWORD", "testing");
+        values.put("TYPE", "admin");
         long newRowId;
         newRowId = db.insert(
                 "USERNAMETABLE",
@@ -87,12 +75,22 @@ public class LoginActivity extends AppCompatActivity {
         ContentValues values1 = new ContentValues();
         values1.put("USERNAME", "engineer");
         values1.put("PASSWORD", "mining");
+        values.put("TYPE", "engineer");
         long newRowId1;
         newRowId = db.insert(
                 "USERNAMETABLE",
                 null,
                 values1);
 
+        ContentValues values2 = new ContentValues();
+        values2.put("USERNAME", "operator");
+        values2.put("PASSWORD", "minelog");
+        values.put("TYPE", "operator");
+        long newRowId2;
+        newRowId = db.insert(
+                "USERNAMETABLE",
+                null,
+                values2);
         db.close();
 
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
