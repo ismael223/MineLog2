@@ -301,14 +301,14 @@ public class MainActivity extends AppCompatActivity {
                 String text = edit.getText().toString();
                 EditText edit1 = (EditText) dialog.findViewById(R.id.new_eq_auth);
                 String edit_pass = edit1.getText().toString();
-
+                String admin_pass_default= getResources().getString(R.string.set_admin_pass);
                 if (TextUtils.isEmpty(text)) {
                     edit.setError("This field cannot be empty.");
                     return;
                 }else if(Character.isDigit(text.charAt(0))) {
                     edit.setError("Equipment Name cannot start with a number");
                     return;
-                }else if(!edit_pass.equals("adminpass")){
+                }else if(!edit_pass.equals(admin_pass_default)){
                     edit1.setError("Incorrect Password");
                     return;
                 }

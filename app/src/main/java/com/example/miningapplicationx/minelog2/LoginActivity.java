@@ -3,6 +3,7 @@ package com.example.miningapplicationx.minelog2;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,11 +31,14 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +49,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 public class LoginActivity extends AppCompatActivity {
     private static final int REQUEST_READ_CONTACTS = 0;
     public final DBHelper dbHelper = new DBHelper(LoginActivity.this);
-
+    public String acct_type;
     private UserLoginTask mAuthTask = null;
 
     // UI references.
@@ -58,7 +62,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        // Set up the login form.
 
         dbHelper.UsernameTables();
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -69,26 +72,24 @@ public class LoginActivity extends AppCompatActivity {
         values.put("TYPE", "admin");
         long newRowId;
         newRowId = db.insert(
-                "USERNAMETABLE",
+                "USERNAMETABLES",
                 null,
                 values);
         ContentValues values1 = new ContentValues();
         values1.put("USERNAME", "engineer");
         values1.put("PASSWORD", "mining");
-        values.put("TYPE", "engineer");
-        long newRowId1;
+        values1.put("TYPE", "engineer");
         newRowId = db.insert(
-                "USERNAMETABLE",
+                "USERNAMETABLES",
                 null,
                 values1);
 
         ContentValues values2 = new ContentValues();
         values2.put("USERNAME", "operator");
         values2.put("PASSWORD", "minelog");
-        values.put("TYPE", "operator");
-        long newRowId2;
+        values2.put("TYPE", "operator");
         newRowId = db.insert(
-                "USERNAMETABLE",
+                "USERNAMETABLES",
                 null,
                 values2);
         db.close();
@@ -115,15 +116,115 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        Button mCreateAccount = (Button) findViewById(R.id.create_account);
+        mCreateAccount.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                function_add_acc();
+            }
+        });
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
     }
 
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
+    public void function_add_acc(){
+        final Dialog dialog = new Dialog(LoginActivity.this);
+        dialog.setContentView(R.layout.dialog_acc_add);
+        Spinner spinner = (Spinner) dialog.findViewById(R.id.acc_type);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.acctype_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                String text_type =  parent.getItemAtPosition(position).toString();
+                acct_type=text_type;
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                String text_type = parent.getSelectedItem().toString();
+                acct_type=text_type;
+
+
+            }
+        });
+
+
+        Button button = (Button) dialog.findViewById(R.id.dialog_acc_ok);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                EditText edit = (EditText) dialog.findViewById(R.id.acc_name);
+                String text = edit.getText().toString();
+                EditText edit1 = (EditText) dialog.findViewById(R.id.acc_pass);
+                String edit_pass = edit1.getText().toString();
+                EditText edit2 = (EditText) dialog.findViewById(R.id.acc_pass_rep);
+                String edit_pass_rep = edit2.getText().toString();
+                EditText edit3 = (EditText) dialog.findViewById(R.id.admin_pass);
+                String admin_pw = edit3.getText().toString();
+
+                String admin_pass_default= getResources().getString(R.string.set_admin_pass);
+                if (TextUtils.isEmpty(text)) {
+                    edit.setError("This field cannot be empty.");
+                    return;
+                }else if(Character.isDigit(text.charAt(0))) {
+                    edit.setError("Account Name cannot start with a number");
+                    return;
+                }else if(!edit_pass.equals(edit_pass_rep)){
+                    edit2.setError("Passwords Do Not Match");
+                    return;
+                }else if(!admin_pw.equals(admin_pass_default)){
+                    edit3.setError("Incorrect Admin Password");
+                    return;
+                }else if (TextUtils.isEmpty(edit_pass)) {
+                    edit1.setError("This field cannot be empty.");
+                    return;
+                }else if (TextUtils.isEmpty(edit_pass_rep)) {
+                    edit2.setError("This field cannot be empty.");
+                    return;
+                }else if (TextUtils.isEmpty(admin_pw)) {
+                    edit3.setError("This field cannot be empty.");
+                    return;
+                }else if (edit_pass.length()<=4){
+                    edit1.setError(getString(R.string.error_invalid_password));
+                    return;
+                }
+
+
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                String sql = "INSERT INTO 'USERNAMETABLES'(USERNAME, PASSWORD, TYPE) "
+                        + "VALUES (?, ?, ?)";
+                db.execSQL(sql,new String[]{text,edit_pass, acct_type});
+
+                finish();
+                startActivity(getIntent());
+                Cursor cursor5 = db.rawQuery("SELECT * FROM 'USERNAMETABLES' WHERE USERNAME = '" + text +"'", null);
+                cursor5.moveToFirst();
+                String name_acc = cursor5.getString(cursor5.getColumnIndex("USERNAME"));
+                cursor5.close();
+                Toast.makeText(LoginActivity.this, "Created Account " + name_acc, Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+                db.close();
+            }
+        });
+        Button button1 = (Button) dialog.findViewById(R.id.dialog_acc_cancel);
+        button1.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                finish();
+                startActivity(getIntent());
+            }
+        });
+
+        dialog.show();
+
+    }
+
     private void attemptLogin() {
         if (mAuthTask != null) {
             return;
@@ -160,7 +261,7 @@ public class LoginActivity extends AppCompatActivity {
         }
         //Check if username exists in database
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        String selectString = "SELECT * FROM USERNAMETABLE WHERE USERNAME =?" ;
+        String selectString = "SELECT * FROM USERNAMETABLES WHERE USERNAME =?" ;
         Cursor cursor = db.rawQuery(selectString, new String[] {email});
         boolean hasObject = false;
         if(cursor.moveToFirst()){
@@ -172,36 +273,7 @@ public class LoginActivity extends AppCompatActivity {
             mEmailView.setError(getString(R.string.error_email_not_in_db));
             focusView = mEmailView;
             cancel = true;
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(
-                    LoginActivity.this);
-
-            alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-                    ContentValues values = new ContentValues();
-                    values.put("USERNAME", email);
-                    values.put("PASSWORD", "abcde");
-                    long newRowId;
-                    newRowId = db.insert(
-                            "USERNAMETABLE",
-                            null,
-                            values);
-                    Intent login_page= new Intent(getApplicationContext(), LoginActivity.class);
-                    finish();
-                    startActivity(login_page);
-                    db.close();
-                }
-            });
-
-            alertDialog.setNegativeButton("No", null);
-
-            alertDialog.setMessage("Username not found.\n Would you like to register this user name?\n(password will be set to: abcde)");
-            alertDialog.setTitle("Exit");
-            alertDialog.show();
-        }
+         }
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -288,7 +360,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             SQLiteDatabase db = dbHelper.getWritableDatabase();
-            String selectString = "SELECT * FROM USERNAMETABLE WHERE USERNAME =?" ;
+            String selectString = "SELECT * FROM USERNAMETABLES WHERE USERNAME =?" ;
             Cursor cursor = db.rawQuery(selectString, new String[] {mEmail});
             cursor.moveToFirst();
             String pass_check = cursor.getString(cursor.getColumnIndex("PASSWORD"));

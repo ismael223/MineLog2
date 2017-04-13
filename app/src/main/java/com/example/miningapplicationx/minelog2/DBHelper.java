@@ -57,7 +57,7 @@ import android.database.sqlite.SQLiteOpenHelper;
         String KEY_2TBL="USERNAME";
         String KEY_ONE="PASSWORD";
         String KEY_TWO="TYPE";
-        ourDatabase.execSQL("CREATE TABLE IF NOT EXISTS 'USERNAMETABLE' ("
+        ourDatabase.execSQL("CREATE TABLE IF NOT EXISTS 'USERNAMETABLES' ("
                 + KEY_ROWID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_2TBL
                 + " TEXT NOT NULL, " + KEY_ONE +  " TEXT NOT NULL, "+KEY_TWO + " TEXT NOT NULL, "+
                 "UNIQUE("+KEY_2TBL+"));");
