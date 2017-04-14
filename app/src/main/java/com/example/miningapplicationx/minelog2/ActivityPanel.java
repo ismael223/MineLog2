@@ -48,6 +48,7 @@ public class ActivityPanel extends AppCompatActivity {
     public static String dbname;
     public static String user;
     public static String pass;
+    public static String type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +62,7 @@ public class ActivityPanel extends AppCompatActivity {
 
         user = bundle.getString("user");
         pass = bundle.getString("pass");
+        type = bundle.getString("type");
         date= shift_spec.substring(0,8);
         lognum=shift_spec.substring(26,27);
         eqdbname = equip_name +"aclist";
@@ -111,6 +113,7 @@ public class ActivityPanel extends AppCompatActivity {
                                     shift_log.putExtra("message",equip_name);
                                     shift_log.putExtra("user",user);
                                     shift_log.putExtra("pass",pass);
+                                    shift_log.putExtra("type",type);
                                     startActivity(shift_log);
                                 }
                             })
@@ -160,7 +163,24 @@ public class ActivityPanel extends AppCompatActivity {
         int duration = Toast.LENGTH_SHORT;
         switch (item.getItemId()){
             case R.id.logout:
-                // TODO: Add additional Function for Logout
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(
+                        ActivityPanel.this);
+
+                alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent login_page= new Intent(getApplicationContext(), LoginActivity.class);
+                        finish();
+                        startActivity(login_page);
+                    }
+                });
+
+                alertDialog.setNegativeButton("No", null);
+
+                alertDialog.setMessage("Do you want to exit?\nYour account will be Logged Out.");
+                alertDialog.setTitle("Exit");
+                alertDialog.show();
                 CharSequence text= "Logout";
                 Toast toast = Toast.makeText(context,text,duration);
                 toast.show();
@@ -242,26 +262,5 @@ public class ActivityPanel extends AppCompatActivity {
 
     }
 
-    public void onBackPressed() {
 
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(
-                ActivityPanel.this);
-
-        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent login_page= new Intent(getApplicationContext(), LoginActivity.class);
-
-                finish();
-                startActivity(login_page);
-            }
-        });
-
-        alertDialog.setNegativeButton("No", null);
-
-        alertDialog.setMessage("Do you want to exit?\nYou will be redirected to the Login Page.");
-        alertDialog.setTitle("Exit");
-        alertDialog.show();
-    }
 }

@@ -386,6 +386,14 @@ public class LoginActivity extends AppCompatActivity {
                 Intent main_act = new Intent(getApplicationContext(),MainActivity.class);
                 main_act.putExtra("user",mEmail);
                 main_act.putExtra("pass",mPassword);
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                String selectString = "SELECT * FROM USERNAMETABLES WHERE USERNAME =?" ;
+                Cursor cursor6 = db.rawQuery(selectString, new String[] {mEmail});
+                cursor6.moveToFirst();
+                String user_type = cursor6.getString(cursor6.getColumnIndex("TYPE"));
+                cursor6.close();
+                db.close();
+                main_act.putExtra("type",user_type);
                 finish();
                 startActivity(main_act);
             } else {

@@ -53,6 +53,7 @@ public class Shift_log extends AppCompatActivity {
 
     public static String user;
     public static String pass;
+    public static String type;
 
 
     @Override
@@ -64,6 +65,7 @@ public class Shift_log extends AppCompatActivity {
         String message = bundle.getString("message");
         user = bundle.getString("user");
         pass = bundle.getString("pass");
+        type = bundle.getString("type");
         placeholder=message;
         setTitle("Shift log for " + placeholder +" ("+user +")");
 
@@ -172,6 +174,7 @@ public class Shift_log extends AppCompatActivity {
                     shiftlog.putExtra("specshift", shift[b].getText().toString());
                     shiftlog.putExtra("user",user);
                     shiftlog.putExtra("pass",pass);
+                    shiftlog.putExtra("type",type);
                     dbname_onclick =  placeholder +"_" + shift[b].getText().toString().substring(0,8) +"_"+ "logentry" + shift[b].getText().toString().substring(26,27);
                     dbHelper.AddActivityLog(dbname_onclick);
                     startActivity(shiftlog);
@@ -195,7 +198,24 @@ public class Shift_log extends AppCompatActivity {
         int duration = Toast.LENGTH_SHORT;
         switch (item.getItemId()){
             case R.id.logout:
-                // TODO: Add additional Function for Logout
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(
+                        Shift_log.this);
+
+                alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent login_page= new Intent(getApplicationContext(), LoginActivity.class);
+                        finish();
+                        startActivity(login_page);
+                    }
+                });
+
+                alertDialog.setNegativeButton("No", null);
+
+                alertDialog.setMessage("Do you want to exit?\nYour account will be Logged Out.");
+                alertDialog.setTitle("Exit");
+                alertDialog.show();
                 CharSequence text= "Logout";
                 Toast toast = Toast.makeText(context,text,duration);
                 toast.show();

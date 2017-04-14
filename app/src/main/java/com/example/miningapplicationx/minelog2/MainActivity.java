@@ -49,13 +49,14 @@ public class MainActivity extends AppCompatActivity {
 
     public static String user;
     public static String pass;
-
+    public static String type;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getIntent().getExtras();
         user = bundle.getString("user");
         pass = bundle.getString("pass");
+        type =bundle.getString("type");
         setContentView(R.layout.activity_main);
 
         LinearLayout myLayout = (LinearLayout) findViewById(R.id.equipment_list);
@@ -94,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
                     shiftlog.putExtra("message", equipment[b].getText().toString());
                     shiftlog.putExtra("user",user);
                     shiftlog.putExtra("pass",pass);
+                    shiftlog.putExtra("type",type);
                     startActivity(shiftlog);
                 }
             });
@@ -116,7 +118,24 @@ public class MainActivity extends AppCompatActivity {
         int duration = Toast.LENGTH_SHORT;
         switch (item.getItemId()){
             case R.id.logout:
-                // TODO: Add additional Function for Logout
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(
+                        MainActivity.this);
+
+                alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent login_page= new Intent(getApplicationContext(), LoginActivity.class);
+                        finish();
+                        startActivity(login_page);
+                    }
+                });
+
+                alertDialog.setNegativeButton("No", null);
+
+                alertDialog.setMessage("Do you want to exit?\nYour account will be Logged Out.");
+                alertDialog.setTitle("Exit");
+                alertDialog.show();
                 CharSequence text= "Logout";
                 Toast toast = Toast.makeText(context,text,duration);
                 toast.show();
@@ -136,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
         menu.add(0, v.getId(), 0, "Edit");
         menu.add(0, v.getId(), 0, "Delete");
     }
+
 
     public boolean onContextItemSelected(MenuItem item) {
         if (item.getTitle().equals("Edit")) {
@@ -351,6 +371,27 @@ public class MainActivity extends AppCompatActivity {
     }
 //End Edit Equipment
     /*END DIALOGS*/
+public void onBackPressed() {
+
+    AlertDialog.Builder alertDialog = new AlertDialog.Builder(
+            MainActivity.this);
+
+    alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            Intent login_page= new Intent(getApplicationContext(), LoginActivity.class);
+            finish();
+            startActivity(login_page);
+        }
+    });
+
+    alertDialog.setNegativeButton("No", null);
+
+    alertDialog.setMessage("Do you want to exit?\nYour account will be Logged Out.");
+    alertDialog.setTitle("Exit");
+    alertDialog.show();
+}
     protected void onDestroy() {
         dbHelper.close();
         super.onDestroy();
