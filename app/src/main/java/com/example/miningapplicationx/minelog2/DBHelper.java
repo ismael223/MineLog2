@@ -35,19 +35,19 @@ import android.database.sqlite.SQLiteOpenHelper;
         String KEY_2TBL="ACTIVITY";
         String KEY_ONE="TIME";
         String KEY_TWO="TYPE";
+        String KEY_THREE="OPERATOR";
         ourDatabase.execSQL("CREATE TABLE IF NOT EXISTS '" + TableNmae+ "' ("
                 + KEY_ROWID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_2TBL
-                + " TEXT NOT NULL, " + KEY_ONE + " TEXT NOT NULL, " +KEY_TWO + " TEXT NOT NULL);");
+                + " TEXT NOT NULL, " + KEY_ONE + " TEXT NOT NULL, " +KEY_TWO + " TEXT NOT NULL, " +  KEY_THREE +  " TEXT NOT NULL);");
     }
     public void AddActivityList(String TableNmae){
         SQLiteDatabase ourDatabase=this.getWritableDatabase();
         String KEY_ROWID="AID";
         String KEY_2TBL="ACTIVITY";
         String KEY_ONE="TYPE";
-        String KEY_TWO="OPERATOR";
         ourDatabase.execSQL("CREATE TABLE IF NOT EXISTS '" + TableNmae+ "' ("
                 + KEY_ROWID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_2TBL
-                + " TEXT NOT NULL, " + KEY_ONE +  " TEXT NOT NULL, " + KEY_TWO +  " TEXT NOT NULL, " +
+                + " TEXT NOT NULL, " + KEY_ONE +  " TEXT NOT NULL, " +
                 "UNIQUE("+KEY_2TBL+"));");
     }
     public void UsernameTables(){

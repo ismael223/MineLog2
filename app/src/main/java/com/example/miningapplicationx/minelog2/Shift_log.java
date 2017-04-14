@@ -230,7 +230,7 @@ public class Shift_log extends AppCompatActivity {
         super.onCreateContextMenu(menu, v, menuInfo);
         menu.setHeaderTitle("Menu");
         menu.add(0, v.getId(), 0, "Delete");
-        menu.add(0, v.getId(), 0, "Export Shift to CSV file");
+        menu.add(0, v.getId()+500, 0, "Export Shift to CSV file");
     }
 
     public boolean onContextItemSelected(MenuItem item) {
@@ -294,7 +294,7 @@ public class Shift_log extends AppCompatActivity {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         List<String[]> data = new ArrayList<String[]>();
-        TextView tv = (TextView) this.findViewById(id);
+        TextView tv = (TextView) this.findViewById(id-500);
         shift_spec= tv.getText().toString();
         datetodb= shift_spec.substring(0,8);
         lognum=shift_spec.substring(26,27);
@@ -311,11 +311,11 @@ public class Shift_log extends AppCompatActivity {
         data.add(new String[] {"Shift", lognum});
         data.add(new String[] {"Type", "Activity", "Time Start", "Operator"});
 
-        Cursor cursor = db.query(dbname, new String[]{"ACTIVITY","TIME","TYPE"},null, null, null, null, null);
+        Cursor cursor = db.query(dbname, new String[]{"ACTIVITY","TIME","TYPE","OPERATOR"},null, null, null, null, null);
 
         if(cursor.moveToFirst());
         {
-            data.add(new String[] {cursor.getString(2), cursor.getString(0), cursor.getString(1)});
+            data.add(new String[] {cursor.getString(2), cursor.getString(0), cursor.getString(1),cursor.getString(3)});
             while (cursor.moveToNext()) {
                 data.add(new String[] {cursor.getString(2), cursor.getString(0),cursor.getString(1),cursor.getString(3)});
             }

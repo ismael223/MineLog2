@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     public static String user;
     public static String pass;
     public static String type;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,14 +147,23 @@ public class MainActivity extends AppCompatActivity {
     }
     /*END MAIN FUNCTION*/
 
-
     /* DIALOGS*/
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         menu.setHeaderTitle("Menu");
         menu.add(0, v.getId(), 0, "Edit");
-        menu.add(0, v.getId(), 0, "Delete");
+        menu.add(0, v.getId()+500, 0, "Delete");
+        if (type.equals("engineer")){
+            menu.getItem(0).setEnabled(true);
+        }else{
+            menu.getItem(0).setEnabled(false);
+        }
+        if (type.equals("engineer")){
+            menu.getItem(1).setEnabled(true);
+        }else{
+            menu.getItem(1).setEnabled(false);
+        }
     }
 
 
@@ -184,17 +194,12 @@ public class MainActivity extends AppCompatActivity {
                 EditText edit = (EditText) dialog1.findViewById(R.id.username);
                 String text = edit.getText().toString();
 
-                EditText edit1 = (EditText) dialog1.findViewById(R.id.edit_pass_auth);
-                String edit_pass = edit1.getText().toString();
 
                 if (TextUtils.isEmpty(text)) {
                     edit.setError("This field cannot be empty");
                     return;
                 }else if(Character.isDigit(text.charAt(0))) {
                     edit.setError("Equipment Name cannot start with a number");
-                    return;
-                }else if(!edit_pass.equals("adminpass")){
-                    edit1.setError("Incorrect Password");
                     return;
                 }
 
@@ -242,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
 
 //Delete Equipment
     public void function2(int id) {
-        TextView tv = (TextView) this.findViewById(id);
+        TextView tv = (TextView) this.findViewById(id-500);
         final String myString = tv.getText().toString();
         final Dialog dialog1 = new Dialog(MainActivity.this);
         dialog1.setContentView(R.layout.dialog_delete_auth);
@@ -259,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                if (text.equals("adminpass")){
+                if (text.equals(pass)){
                     db.delete("EQUIPMENTLOG", "EQUIPMENTNAME=? ", new String[]{myString});
                     finish();
                     startActivity(getIntent());
@@ -319,17 +324,11 @@ public class MainActivity extends AppCompatActivity {
 
                 EditText edit = (EditText) dialog.findViewById(R.id.new_eq_name);
                 String text = edit.getText().toString();
-                EditText edit1 = (EditText) dialog.findViewById(R.id.new_eq_auth);
-                String edit_pass = edit1.getText().toString();
-                String admin_pass_default= getResources().getString(R.string.set_admin_pass);
                 if (TextUtils.isEmpty(text)) {
                     edit.setError("This field cannot be empty.");
                     return;
                 }else if(Character.isDigit(text.charAt(0))) {
                     edit.setError("Equipment Name cannot start with a number");
-                    return;
-                }else if(!edit_pass.equals(admin_pass_default)){
-                    edit1.setError("Incorrect Password");
                     return;
                 }
 
