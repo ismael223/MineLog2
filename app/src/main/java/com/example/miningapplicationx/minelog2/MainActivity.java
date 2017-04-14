@@ -59,6 +59,12 @@ public class MainActivity extends AppCompatActivity {
         pass = bundle.getString("pass");
         type =bundle.getString("type");
         setContentView(R.layout.activity_main);
+        Button button_add = (Button) findViewById(R.id.add_new_eq);
+        if (type.equals("engineer")){
+            button_add.setEnabled(true);
+        }else{
+            button_add.setEnabled(false);
+        }
 
         LinearLayout myLayout = (LinearLayout) findViewById(R.id.equipment_list);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
