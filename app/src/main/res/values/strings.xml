@@ -43,7 +43,7 @@
         completions."
     </string>
     <string name="error_email_not_in_db">Username not found</string>
-    <string name="enter_password">Enter Password</string>
+    <string name="enter_password">Enter Account Password</string>
     <string name="prompt_password_edit">Enter Valid Password</string>
     <string name="create_acc">Create Account</string>
     <string name="set_admin_pass">mining123</string>
@@ -51,4 +51,5 @@
     <string name="create_pass_hint">Account Password</string>
     <string name="create_pass_hint_rep">Confirm Password</string>
     <string name="admin_pass_hint">Enter Admin Password</string>
+    <string name="assign_operator">Assign Operator to this Shift</string>
 </resources>

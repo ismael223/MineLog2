@@ -25,9 +25,10 @@ import android.database.sqlite.SQLiteOpenHelper;
         String KEY_ROWID="EQSHIFTID";
         String KEY_2TBL="EQSHIFTMD";
         String KEY_ONE="EQNUM";
+        String KEY_TWO="ASSIGNED";
         ourDatabase.execSQL("CREATE TABLE IF NOT EXISTS '" + TableNmae+ "' ("
                 + KEY_ROWID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_2TBL
-                + " TEXT NOT NULL, " + KEY_ONE + " INTEGER, " + "UNIQUE("+KEY_2TBL+"));");
+                + " TEXT NOT NULL, " + KEY_ONE + " INTEGER, " + KEY_TWO + " TEXT NOT NULL, " + "UNIQUE("+KEY_2TBL+"));");
     }
     public void AddActivityLog(String TableNmae){
         SQLiteDatabase ourDatabase=this.getWritableDatabase();

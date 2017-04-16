@@ -56,10 +56,16 @@ public class ActivityPanel extends AppCompatActivity {
         setContentView(R.layout.activity_activity_panel);
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+
         Bundle bundle = getIntent().getExtras();
         equip_name = bundle.getString("message");
         shift_spec = bundle.getString("specshift");
+        Cursor cursor_title = db.rawQuery("SELECT ASSIGNED FROM "+equip_name +" WHERE EQSHIFTMD ='" + shift_spec+"'" , null);
+        cursor_title.moveToFirst();
+        String assigned_person = cursor_title.getString(0);
+        cursor_title.close();
 
+        setTitle("Activity log (assigned to " + assigned_person +")" );
         user = bundle.getString("user");
         pass = bundle.getString("pass");
         type = bundle.getString("type");

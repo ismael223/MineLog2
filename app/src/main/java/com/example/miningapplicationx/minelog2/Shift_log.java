@@ -19,9 +19,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -51,6 +54,7 @@ public class Shift_log extends AppCompatActivity {
     public static String dbname_onclick;
     public static int previous_shift;
 
+    public static String assigned;
     public static String user;
     public static String pass;
     public static String type;
@@ -94,7 +98,7 @@ public class Shift_log extends AppCompatActivity {
                 null,
                 values);
         values.put("ACTIVITY","Standby");
-        values.put("TYPE","I");
+        values.put("TYPE","S");
         long newRowId3;
         newRowId = db.insert(
                 eqdbname,
@@ -262,7 +266,7 @@ public class Shift_log extends AppCompatActivity {
                                 edit.setError("This field cannot be empty");
                                 return;
                             }
-                    if (text.equals("adminpass")) {
+                    if (text.equals(pass)) {
                         db.delete(placeholder, "EQSHIFTMD=? ", new String[]{myString});
                         finish();
                         startActivity(getIntent());
@@ -288,99 +292,250 @@ public class Shift_log extends AppCompatActivity {
     }
 
     public void function3(int id) {
-        Toast.makeText(this, "Shift Log Exported", Toast.LENGTH_SHORT).show();
-
-
-
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        List<String[]> data = new ArrayList<String[]>();
-        TextView tv = (TextView) this.findViewById(id-500);
-        shift_spec= tv.getText().toString();
-        datetodb= shift_spec.substring(0,8);
-        lognum=shift_spec.substring(26,27);
-
-        eqdbname = placeholder +"aclist";
-        dbname = placeholder +"_" + date +"_"+ "logentry" +lognum;
-        String baseDir = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
-        String fileName = dbname+".csv";
-        String filePath = baseDir + File.separator+ "Download" + File.separator+ fileName;
-        File f = new File(filePath);
-        data.add(new String[] {"Equipment", placeholder});
-        data.add(new String[] {"Type", uname1});
-        data.add(new String[] {"Date", datetodb});
-        data.add(new String[] {"Shift", lognum});
-        data.add(new String[] {"Type", "Activity", "Time Start", "Operator"});
-
-        Cursor cursor = db.query(dbname, new String[]{"ACTIVITY","TIME","TYPE","OPERATOR"},null, null, null, null, null);
-
-        if(cursor.moveToFirst());
-        {
-            data.add(new String[] {cursor.getString(2), cursor.getString(0), cursor.getString(1),cursor.getString(3)});
-            while (cursor.moveToNext()) {
-                data.add(new String[] {cursor.getString(2), cursor.getString(0),cursor.getString(1),cursor.getString(3)});
-            }
-        }
-        cursor.close();
-        db.close();
-
-       try {
-            CSVWriter writer = new CSVWriter(new FileWriter(f));
-            writer.writeAll(data);
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public void function4(View s){
         AlertDialog.Builder builder = new AlertDialog.Builder(Shift_log.this);
         builder.setTitle(R.string.app_name);
-        builder.setMessage("New shift added. Returning to Shift Log");
+        builder.setMessage("Press OK to Export Shift Log.");
+        final int log_id = id;
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                Toast.makeText(Shift_log.this, "Shift Log Exported", Toast.LENGTH_SHORT).show();
+
+
+
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
-                ContentValues values = new ContentValues();
-                Cursor cursor;
-                values.put("EQSHIFTMD", date);
+                List<String[]> data = new ArrayList<String[]>();
+                TextView tv = (TextView) Shift_log.this.findViewById(log_id-500);
+                shift_spec= tv.getText().toString();
+                datetodb= shift_spec.substring(0,8);
+                lognum=shift_spec.substring(26,27);
 
-                db.beginTransaction();
-                try {
+                eqdbname = placeholder +"aclist";
+                dbname = placeholder +"_" + date +"_"+ "logentry" +lognum;
+                String baseDir = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
+                String fileName = dbname+".csv";
+                String filePath = baseDir + File.separator+ "Download" + File.separator+ fileName;
+                File f = new File(filePath);
+                data.add(new String[] {"Equipment", placeholder});
+                data.add(new String[] {"Type", uname1});
+                data.add(new String[] {"Date", datetodb});
+                data.add(new String[] {"Shift", lognum});
+                data.add(new String[] {"Type", "Activity", "Time Start", "Operator"});
 
-                    cursor = db.rawQuery("SELECT * FROM " + placeholder + " WHERE EQSHIFTID = (SELECT MAX (EQSHIFTID) FROM " + placeholder + ");",null);
-                    cursor.moveToFirst();
-                    previous_shift=cursor.getInt(cursor.getColumnIndex("EQNUM"));
-                    db.setTransactionSuccessful();
-                }catch(Exception e){
-                    previous_shift=0;
-                } finally {
-                    db.endTransaction();
-                }
+                Cursor cursor = db.query(dbname, new String[]{"ACTIVITY","TIME","TYPE","OPERATOR"},null, null, null, null, null);
 
-                if (previous_shift==3)
+                if(cursor.moveToFirst());
                 {
-                    previous_shift= 1;
+                    data.add(new String[] {cursor.getString(2), cursor.getString(0), cursor.getString(1),cursor.getString(3)});
+                    while (cursor.moveToNext()) {
+                        data.add(new String[] {cursor.getString(2), cursor.getString(0),cursor.getString(1),cursor.getString(3)});
+                    }
                 }
-                else
-                {
-                    previous_shift=previous_shift+1;
-                }
-                values.put("EQNUM",previous_shift);
+                cursor.close();
+                db.close();
 
-                long newRowId;
-                newRowId = db.insert(
-                        placeholder,
-                        null,
-                        values);
-                String shifts;
-                cursor = db.rawQuery("SELECT * FROM " + placeholder + " WHERE EQSHIFTMD = " + date + " AND EQNUM = " + previous_shift, null);
-                String uname= "0", uId="0"; int uNum=0;
-                if( cursor != null && cursor.moveToFirst() ) {
-                    uname = cursor.getString(cursor.getColumnIndex("EQSHIFTMD"));
-                    uId = cursor.getString(cursor.getColumnIndex("EQSHIFTID"));
-                    uNum = cursor.getInt(cursor.getColumnIndex("EQNUM"));
+               try {
+                    CSVWriter writer = new CSVWriter(new FileWriter(f));
+                    writer.writeAll(data);
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public void function4(View s){
+        if (type.equals("engineer")) {
+            final Dialog dialog1 = new Dialog(Shift_log.this);
+            dialog1.setContentView(R.layout.dialog_add_shift);
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+            ArrayList<String> data = new ArrayList<>();
+            Cursor cursor = db.rawQuery("SELECT USERNAME FROM USERNAMETABLES WHERE TYPE = 'operator'", null);
+            if(cursor.moveToFirst());
+            {
+                data.add(cursor.getString(0));
+                while (cursor.moveToNext()) {
+                    data.add(cursor.getString(0));
+                }
+            }
+            cursor.close();
+            db.close();
+            Spinner spinner = (Spinner) dialog1.findViewById(R.id.operator_list);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                    android.R.layout.simple_spinner_item, data);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(adapter);
+
+
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view,
+                                           int position, long id) {
+                    String text_type =  parent.getItemAtPosition(position).toString();
+                    assigned=text_type;
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                    String text_type = parent.getSelectedItem().toString();
+                    assigned=text_type;
+
+
+                }
+            });
+
+            Button button = (Button) dialog1.findViewById(R.id.dialog_ok_shift);
+            button.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    SQLiteDatabase db = dbHelper.getWritableDatabase();
+                    ContentValues values = new ContentValues();
+                    Cursor cursor;
+                    values.put("EQSHIFTMD", date);
+
+                    db.beginTransaction();
+                    try {
+
+                        cursor = db.rawQuery("SELECT * FROM " + placeholder + " WHERE EQSHIFTID = (SELECT MAX (EQSHIFTID) FROM " + placeholder + ");", null);
+                        cursor.moveToFirst();
+                        previous_shift = cursor.getInt(cursor.getColumnIndex("EQNUM"));
+                        db.setTransactionSuccessful();
+                    } catch (Exception e) {
+                        previous_shift = 0;
+                    } finally {
+                        db.endTransaction();
+                    }
+
+                    if (previous_shift == 3) {
+                        previous_shift = 1;
+                    } else {
+                        previous_shift = previous_shift + 1;
+                    }
+                    values.put("EQNUM", previous_shift);
+                    values.put("ASSIGNED", assigned);
+
+                    long newRowId;
+                    newRowId = db.insert(
+                            placeholder,
+                            null,
+                            values);
+                    String shifts;
+                    cursor = db.rawQuery("SELECT * FROM " + placeholder + " WHERE EQSHIFTMD = " + date + " AND EQNUM = " + previous_shift, null);
+                    String uname = "0", uId = "0";
+                    int uNum = 0;
+                    if (cursor != null && cursor.moveToFirst()) {
+                        uname = cursor.getString(cursor.getColumnIndex("EQSHIFTMD"));
+                        uId = cursor.getString(cursor.getColumnIndex("EQSHIFTID"));
+                        uNum = cursor.getInt(cursor.getColumnIndex("EQNUM"));
+                    }
+                    shifts = uname + " log entry number " + uNum;
+                    ContentValues values1 = new ContentValues();
+                    values1.put("EQSHIFTMD", shifts);
+                    values.put("ASSIGNED", assigned);
+
+                    String selection = "EQSHIFTID" + " LIKE ?";
+                    String[] selectionArgs = {String.valueOf(uId)};
+
+                    datetodb = shifts.substring(0, 8);
+                    lognum = shifts.substring(26, 27);
+                    eqdbname = placeholder + "aclist";
+                    dbname = placeholder + "_" + date + "_" + "logentry" + lognum;
+                    dbHelper.AddActivityLog(dbname);
+
+
+                    db.beginTransaction();
+                    try {
+                        int count = db.update(
+
+                                placeholder,
+                                values1,
+                                selection,
+                                selectionArgs);
+                        db.setTransactionSuccessful();
+                    } catch (Exception e) {
+                        Toast.makeText(Shift_log.this, "Duplicates Error End Shift to return to Shift Log", Toast.LENGTH_SHORT).show();
+
+                    } finally {
+                        db.endTransaction();
+                    }
+                    cursor.close();
+                    db.delete(placeholder, "EQSHIFTMD=? ", new String[]{date});
+                    finish();
+                    startActivity(getIntent());
+                    db.close();
+                    dialog1.dismiss();
+                }
+            });
+            Button button1 = (Button) dialog1.findViewById(R.id.dialog_cancel_shift);
+            button1.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    finish();
+                    startActivity(getIntent());
+                }
+
+            });
+            dialog1.show();
+        } else if (type.equals("operator")){
+            AlertDialog.Builder builder = new AlertDialog.Builder(Shift_log.this);
+            builder.setTitle(R.string.app_name);
+            builder.setMessage("New shift added. Returning to Shift Log");
+            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    SQLiteDatabase db = dbHelper.getWritableDatabase();
+                    ContentValues values = new ContentValues();
+                    Cursor cursor;
+                    values.put("EQSHIFTMD", date);
+                    values.put("ASSIGNED", user);
+
+                    db.beginTransaction();
+                    try {
+
+                        cursor = db.rawQuery("SELECT * FROM " + placeholder + " WHERE EQSHIFTID = (SELECT MAX (EQSHIFTID) FROM " + placeholder + ");",null);
+                        cursor.moveToFirst();
+                        previous_shift=cursor.getInt(cursor.getColumnIndex("EQNUM"));
+                        db.setTransactionSuccessful();
+                    }catch(Exception e){
+                        previous_shift=0;
+                    } finally {
+                        db.endTransaction();
+                    }
+
+                    if (previous_shift==3)
+                    {
+                        previous_shift= 1;
+                    }
+                    else
+                    {
+                        previous_shift=previous_shift+1;
+                    }
+                    values.put("EQNUM",previous_shift);
+
+
+                    long newRowId;
+                    newRowId = db.insert(
+                            placeholder,
+                            null,
+                            values);
+                    String shifts;
+                    cursor = db.rawQuery("SELECT * FROM " + placeholder + " WHERE EQSHIFTMD = " + date + " AND EQNUM = " + previous_shift, null);
+                    String uname= "0", uId="0"; int uNum=0;
+                    if( cursor != null && cursor.moveToFirst() ) {
+                        uname = cursor.getString(cursor.getColumnIndex("EQSHIFTMD"));
+                        uId = cursor.getString(cursor.getColumnIndex("EQSHIFTID"));
+                        uNum = cursor.getInt(cursor.getColumnIndex("EQNUM"));
+                    }
                     shifts = uname + " log entry number " + uNum;
                     ContentValues values1 = new ContentValues();
                     values1.put("EQSHIFTMD",shifts);
+                    values1.put("ASSIGNED", user);
 
                     String selection = "EQSHIFTID" + " LIKE ?";
                     String[] selectionArgs = { String.valueOf(uId) };
@@ -392,38 +547,39 @@ public class Shift_log extends AppCompatActivity {
                     dbHelper.AddActivityLog(dbname);
 
 
-                db.beginTransaction();
-                 try {
-                     int count = db.update(
+                    db.beginTransaction();
+                    try {
+                        int count = db.update(
 
-                             placeholder,
-                             values1,
-                             selection,
-                             selectionArgs);
-                     db.setTransactionSuccessful();
-                 }
-                 catch(Exception e){
-                     Toast.makeText(Shift_log.this, "Duplicates Error End Shift to return to Shift Log", Toast.LENGTH_SHORT).show();
+                                placeholder,
+                                values1,
+                                selection,
+                                selectionArgs);
+                        db.setTransactionSuccessful();
+                    }
+                    catch(Exception e){
+                        Toast.makeText(Shift_log.this, "Duplicates Error Maximum number of Shifts reached", Toast.LENGTH_SHORT).show();
 
+                    }
+                    finally {
+                        db.endTransaction();
+                    }
+                    cursor.close();
+                    db.delete(placeholder,"EQSHIFTMD=? ",new String[]{date});
+                    finish();
+                    startActivity(getIntent());
+                    db.close();
+                    dialog.dismiss();
                 }
-                finally {
-                     db.endTransaction();
-                 }
-                cursor.close();
-                db.delete(placeholder,"EQSHIFTMD=? ",new String[]{date});
-                finish();
-                startActivity(getIntent());
-                db.close();
-                dialog.dismiss();
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-            }
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
     }
 
 }
