@@ -333,7 +333,7 @@ public class Shift_log extends AppCompatActivity {
                                 edit.setError("This field cannot be empty");
                                 return;
                             }
-                    if (text.equals(assigned_person_password)) {
+                    if (text.equals(assigned_person_password)||(text.equals(pass)&&type.equals("engineer"))) {
                         db.delete(placeholder, "EQSHIFTMD=? ", new String[]{myString});
                         finish();
                         startActivity(getIntent());

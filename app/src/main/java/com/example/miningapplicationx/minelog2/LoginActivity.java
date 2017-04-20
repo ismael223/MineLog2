@@ -66,19 +66,11 @@ public class LoginActivity extends AppCompatActivity {
         dbHelper.UsernameTables();
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put("USERNAME", "admin");
-        values.put("PASSWORD", "testing");
-        values.put("TYPE", "admin");
-        long newRowId;
-        newRowId = db.insert(
-                "USERNAMETABLES",
-                null,
-                values);
         ContentValues values1 = new ContentValues();
         values1.put("USERNAME", "engineer");
         values1.put("PASSWORD", "mining");
         values1.put("TYPE", "engineer");
+        long newRowId;
         newRowId = db.insert(
                 "USERNAMETABLES",
                 null,
