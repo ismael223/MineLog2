@@ -268,6 +268,13 @@ public class ActivityPanel extends AppCompatActivity {
 
 
     }
-
-
+    @Override
+    public void onBackPressed() {
+        Intent main_act= new Intent(this, Shift_log.class);
+        main_act.putExtra("user",user);
+        main_act.putExtra("pass",pass);
+        main_act.putExtra("type",type);
+        main_act.putExtra("message",equip_name);
+        startActivity(main_act);
+    }
 }

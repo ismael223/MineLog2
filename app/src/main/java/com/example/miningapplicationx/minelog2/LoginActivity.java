@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteAbortException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.NonNull;
@@ -192,15 +193,20 @@ public class LoginActivity extends AppCompatActivity {
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
                 String sql = "INSERT INTO 'USERNAMETABLES'(USERNAME, PASSWORD, TYPE) "
                         + "VALUES (?, ?, ?)";
-                db.execSQL(sql,new String[]{text,edit_pass, acct_type});
+                try {
+                    db.execSQL(sql, new String[]{text, edit_pass, acct_type});
+                }catch (Exception e){
+                    Toast.makeText(LoginActivity.this, "Duplicates error username already exists", Toast.LENGTH_SHORT).show();
 
+                }
                 finish();
                 startActivity(getIntent());
                 Cursor cursor5 = db.rawQuery("SELECT * FROM 'USERNAMETABLES' WHERE USERNAME = '" + text +"'", null);
-                cursor5.moveToFirst();
+                if(cursor5.moveToFirst()){
                 String name_acc = cursor5.getString(cursor5.getColumnIndex("USERNAME"));
+                Toast.makeText(LoginActivity.this, "Created Account " + name_acc, Toast.LENGTH_SHORT).show();}
+
                 cursor5.close();
-                Toast.makeText(LoginActivity.this, "Created Account " + name_acc, Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
                 db.close();
             }

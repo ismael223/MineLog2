@@ -664,6 +664,13 @@ public class Shift_log extends AppCompatActivity {
             alert.show();
         }
     }
-
+    @Override
+    public void onBackPressed() {
+        Intent main_act= new Intent(this, MainActivity.class);
+        main_act.putExtra("user",user);
+        main_act.putExtra("pass",pass);
+        main_act.putExtra("type",type);
+        startActivity(main_act);
+    }
 }
 
