@@ -392,7 +392,7 @@ public class Shift_log extends AppCompatActivity {
                 }
 
 
-                File f = new File(exportDir, "csvname.csv");
+                File f = new File(exportDir, fileName);
                 data.add(new String[] {"Equipment", placeholder});
                 data.add(new String[] {"Type", uname1});
                 data.add(new String[] {"Date", datetodb});
