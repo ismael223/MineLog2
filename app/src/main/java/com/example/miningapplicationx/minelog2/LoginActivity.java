@@ -375,9 +375,7 @@ public class LoginActivity extends AppCompatActivity {
             showProgress(false);
 
             if (success) {
-                Intent main_act = new Intent(getApplicationContext(),MainActivity.class);
-                main_act.putExtra("user",mEmail);
-                main_act.putExtra("pass",mPassword);
+
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
                 String selectString = "SELECT * FROM USERNAMETABLES WHERE USERNAME =?" ;
                 Cursor cursor6 = db.rawQuery(selectString, new String[] {mEmail});
@@ -385,6 +383,10 @@ public class LoginActivity extends AppCompatActivity {
                 String user_type = cursor6.getString(cursor6.getColumnIndex("TYPE"));
                 cursor6.close();
                 db.close();
+
+                Intent main_act = new Intent(getApplicationContext(),MainActivity.class);
+                main_act.putExtra("user",mEmail);
+                main_act.putExtra("pass",mPassword);
                 main_act.putExtra("type",user_type);
                 finish();
                 startActivity(main_act);

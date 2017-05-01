@@ -133,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent login_page= new Intent(getApplicationContext(), LoginActivity.class);
+                        login_page.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         finish();
                         startActivity(login_page);
                     }

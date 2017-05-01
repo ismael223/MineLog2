@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteAbortException;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 import android.provider.BaseColumns;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -269,6 +270,8 @@ public class Shift_log extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent login_page= new Intent(getApplicationContext(), LoginActivity.class);
+
+                        login_page.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         finish();
                         startActivity(login_page);
                     }
@@ -377,11 +380,19 @@ public class Shift_log extends AppCompatActivity {
                 lognum=shift_spec.substring(26,27);
 
                 eqdbname = placeholder +"aclist";
-                dbname = placeholder +"_" + date +"_"+ "logentry" +lognum;
+                dbname = placeholder +"_" + datetodb +"_"+ "logentry" +lognum;
                 String baseDir = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
                 String fileName = dbname+".csv";
                 String filePath = baseDir + File.separator+ "Download" + File.separator+ fileName;
-                File f = new File(filePath);
+
+                File exportDir = new File(Environment.getExternalStorageDirectory(), "");
+                if (!exportDir.exists())
+                {
+                    exportDir.mkdirs();
+                }
+
+
+                File f = new File(exportDir, "csvname.csv");
                 data.add(new String[] {"Equipment", placeholder});
                 data.add(new String[] {"Type", uname1});
                 data.add(new String[] {"Date", datetodb});
@@ -405,6 +416,7 @@ public class Shift_log extends AppCompatActivity {
                 db.close();
 
                try {
+                    f.createNewFile();
                     CSVWriter writer = new CSVWriter(new FileWriter(f));
                     writer.writeAll(data);
                     writer.close();
